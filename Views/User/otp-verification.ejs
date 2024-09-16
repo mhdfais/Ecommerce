@@ -1,0 +1,55 @@
+<% include('../Layout/header.ejs') %>
+
+    <link rel="stylesheet" href=" reg-style.css">
+    <div class="container">
+        <div class="card" style="height: 240px;">
+            <div class="card_title">
+                <h1>OTP Verification</h1>
+            </div>
+            <p style="color: red;text-align: center;"><%= expired %></p>
+
+            <div class="form">
+                <form action="/verify-otp" method="post">
+                    <input type="hidden" name="userId" value="<%= userId %>">
+                    <input type="text" name="otp" placeholder="OTP" id="" required="true" />
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <p style="color: white;" id="timer">05:00</p>
+                        </div>
+                        <div><a href="/resendOtp?userId=<%= userId %>">Resend OTP</a></div>
+                    </div>
+                    <button>Validate</button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const expiresAt = parseInt("<%= expiresAt %>");
+        const currentTime = Date.now();
+        let timeLeft = Math.floor((expiresAt - currentTime) / 1000); // Remaining seconds
+
+        // Get the timer element from the HTML
+        const timerElement = document.getElementById("timer");
+
+        // Function to update the timer display every second
+        const countdownTimer = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdownTimer);
+                timerElement.textContent = "OTP Expired";
+                // Optionally, disable the submit button after OTP expiry
+                document.querySelector("button").disabled = true;
+            } else {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                timerElement.textContent = `${minutes}:${seconds}`;
+                timeLeft--;
+            }
+        }, 1000);
+    </script>
+
+    <% include('../Layout/footer.ejs') %>

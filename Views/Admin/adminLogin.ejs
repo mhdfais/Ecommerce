@@ -1,0 +1,25 @@
+<% include('../Layout/header.ejs') %>
+
+    <link rel="stylesheet" href=" reg-style.css">
+    <div class="container">
+        <div class="card" style="height: 350px;">
+            <div class="card_title">
+                <h1>Admin Login</h1>
+            </div>
+            <p style="color: red;text-align: center;"><%= fail %></p>
+            <div style="padding-top: 35px;" class="form">
+                <form action="/verifyAdmin" method="post">
+
+                    <input type="email" name="email" placeholder="Email" id="email" required="true" />
+                    <input type="password" name="pswd" placeholder="Password" id="password" required="true" />
+                    <div style="display: flex; justify-content: space-between;">
+                        <!-- <div><p style="color: white;"></p></div>
+                        <div><a href=""></a></div> -->
+                     </div>
+                    <button>Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <% include('../Layout/footer.ejs') %>

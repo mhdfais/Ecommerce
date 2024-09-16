@@ -1,0 +1,28 @@
+<% include('../Layout/header.ejs') %>
+
+    <link rel="stylesheet" href=" reg-style.css">
+    <div class="container">
+        <div class="card">
+            <div class="card_title">
+                <h1>Create Account</h1>
+                <span>Already have an account? <a href="">Sign In</a></span>
+            </div>
+            <p style="color: red;text-align: center;"><%= emailExist %></p>
+            <p style="color: red;text-align: center;"><%= pswdMatch %></p>
+            <div class="form">
+                <form action="/register" method="post">
+                    <input type="text" name="name" id="username" placeholder="Name" required="true" />
+                    <input type="email" name="email" placeholder="Email" id="email" required="true" />
+                    <input type="tel" name="phno" placeholder="phone number" id="password" required="true" />
+                    <input type="password" name="pswd" placeholder="Password" id="" required="true" />
+                    <input type="password" name="confirmPswd" placeholder="Confirm password" id="" required="true" />
+                    <button>Sign Up</button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <% include('../Layout/footer.ejs') %>
