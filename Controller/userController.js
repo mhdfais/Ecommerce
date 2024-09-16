@@ -3,8 +3,7 @@ const User = require("../Models/userModel");
 const userOtpVerification = require("../Models/userOtpVerification");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const mongoose=require('mongoose')
-
+const mongoose = require("mongoose");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -23,7 +22,7 @@ transporter.verify((error, success) => {
 });
 
 const sendOtpVerificationEmail = async ({ _id, email }, res) => {
-    // console.log(`${_id}  11`)/////////////////////////////////
+  // console.log(`${_id}  11`)/////////////////////////////////
   try {
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
     const mailOptions = {
@@ -71,7 +70,7 @@ const loadRegister = async (req, res) => {
   try {
     const pswdMatch = req.flash("pswdMatch");
     const emailExist = req.flash("emailExist");
-    console.log('hiii')
+    // console.log('hiii')
     res.render("register", { emailExist, pswdMatch });
   } catch (error) {
     console.log(error.message);
@@ -81,7 +80,7 @@ const loadRegister = async (req, res) => {
 const insertUser = async (req, res) => {
   const { name, email, phno, pswd, confirmPswd } = req.body;
   if (pswd !== confirmPswd) {
-    console.log("1"); ///////
+    // console.log("1"); ///////
 
     req.flash("pswdMatch", "Passwords do not match");
     return res.redirect("/register");
@@ -89,7 +88,7 @@ const insertUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("2"); //////
+      // console.log("2"); //////
 
       req.flash("emailExist", "User already exists");
       return res.redirect("/register");
@@ -247,37 +246,35 @@ const loadLogin = async (req, res) => {
 };
 
 const loadOtpVerification = async (req, res) => {
-
   try {
     const userId = req.query.userId;
-    console.log(userId);///////
-    
+    // console.log(userId);///////
+
     if (!userId) {
-        console.log("6");//////
-        
+      console.log("user id not got from register"); //////
       return res.redirect("/register");
     }
-  
+    console.log("user id got from register"); //////
+
     const user = await User.findById(userId);
     // const user = await User.findById(mongoose.Types.ObjectId(userId));
-    console.log(user);
-    
+    // console.log(user);
+
     if (!user) {
-        console.log("7");/////////
-        
+      console.log("no user finded from user by user id"); /////////
       return res.redirect("/register");
     }
-    console.log(userId)////////////
-    const otpRecord = await userOtpVerification.findOne({ userId:userId });
-    // const otpRecord = await userOtpVerification.findOne({ userId: mongoose.Types.ObjectId(userId) });
-    console.log(otpRecord)/////
+    console.log("user finded from user by user id"); /////////
+
+    // console.log(userId)////////////
+    const otpRecord = await userOtpVerification.findOne({ userId });
+    // const otpRecord = await userOtpVerification.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+
     if (!otpRecord) {
-        console.log("8");//////////
-        
+      console.log("no otp record found"); /////
       return res.redirect("/register");
     }
--
-    console.log("5"); ///////////////////////////////
+    console.log("otp record found"); ///////////////////////////////
 
     const expired = req.flash("expired");
     res.render("otp-verification", {
