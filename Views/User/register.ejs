@@ -1,6 +1,13 @@
-<%- include('header.ejs') %>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
     
+
 
     <style>
         body {
@@ -95,6 +102,11 @@
             text-align: center;
         }
 
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 15px;
@@ -130,12 +142,31 @@
 
             <div class="form">
                 <form action="/register" method="post" onsubmit="return validateForm()">
-                    <input type="text" name="name" id="name" placeholder="Name" required="true" />
-                    <input type="email" name="email" placeholder="Email" id="email" required="true" />
-                    <input type="tel" name="phno" placeholder="Phone Number" id="phno" required="true" />
-                    <input type="password" name="pswd" placeholder="Password" id="pswd" required="true" />
-                    <input type="password" name="confirmPswd" placeholder="Confirm Password" id="confirmPswd"
-                        required="true" />
+                    <div>
+                        <input type="text" name="name" id="name" placeholder="Name" required="true" />
+                        <span id="nameError" class="error-message"></span>
+                    </div>
+            
+                    <div>
+                        <input type="email" name="email" placeholder="Email" id="email" required="true" />
+                        <span id="emailError" class="error-message"></span>
+                    </div>
+            
+                    <div>
+                        <input type="tel" name="phno" placeholder="Phone Number" id="phno" required="true" />
+                        <span id="phnoError" class="error-message"></span>
+                    </div>
+            
+                    <div>
+                        <input type="password" name="pswd" placeholder="Password" id="pswd" required="true" />
+                        <span id="pswdError" class="error-message"></span>
+                    </div>
+            
+                    <div>
+                        <input type="password" name="confirmPswd" placeholder="Confirm Password" id="confirmPswd" required="true" />
+                        <span id="confirmPswdError" class="error-message"></span>
+                    </div>
+            
                     <button type="submit">Sign Up</button>
                 </form>
             </div>
@@ -147,53 +178,58 @@
 
     <script>
         function validateForm() {
+            // Clear previous error messages
+            document.getElementById("nameError").innerText = "";
+            document.getElementById("emailError").innerText = "";
+            document.getElementById("phnoError").innerText = "";
+            document.getElementById("pswdError").innerText = "";
+            document.getElementById("confirmPswdError").innerText = "";
+    
             // Get form values
             const name = document.getElementById("name").value.trim();
             const email = document.getElementById("email").value.trim();
             const phno = document.getElementById("phno").value.trim();
             const password = document.getElementById("pswd").value.trim();
             const confirmPassword = document.getElementById("confirmPswd").value.trim();
-
-            // Check for empty fields
-            if (name === "" || email === "" || phno === "" || password === "" || confirmPassword === "") {
-                alert("All fields are required.");
-                return false;
-            }
-
+    
+            let isValid = true; // Flag to check if the form is valid
+    
             // Validate name (at least 3 characters)
             if (name.length === 0) {
-                alert("Name must be at required.")
-                return false;
+                document.getElementById("nameError").innerText = "Name is required.";
+                isValid = false;
             }
-
+    
             // Validate email format
             const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
             if (!emailPattern.test(email)) {
-                alert("Please enter a valid email address.");
-                return false;
+                document.getElementById("emailError").innerText = "Please enter a valid email address.";
+                isValid = false;
             }
-
+    
             // Validate phone number (numeric and 10 digits)
             const phonePattern = /^\d{10}$/;
             if (!phonePattern.test(phno)) {
-                alert("Please enter a valid 10-digit phone number.");
-                return false;
+                document.getElementById("phnoError").innerText = "Please enter a valid 10-digit phone number.";
+                isValid = false;
             }
-
+    
             // Validate password length (minimum 6 characters)
             if (password.length < 6) {
-                alert("Password must be at least 6 characters long.");
-                return false;
+                document.getElementById("pswdError").innerText = "Password must be at least 6 characters long.";
+                isValid = false;
             }
-
+    
             // Validate password and confirm password match
             if (password !== confirmPassword) {
-                alert("Passwords do not match.");
-                return false;
+                document.getElementById("confirmPswdError").innerText = "Passwords do not match.";
+                isValid = false;
             }
-
-            return true; // Allow form submission if all validations pass
+    
+            return isValid; // Return true if form is valid, false otherwise
         }
     </script>
 
-    <%- include('footer.ejs') %>
+</body>
+</html>
+

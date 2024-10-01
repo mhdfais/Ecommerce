@@ -114,7 +114,8 @@ const loadCategory = async (req, res) => {
 
 const loadAddCategory = async (req, res) => {
   try {
-    res.render("addCategory");
+    const cateExist = req.flash("cateExist");
+    res.render("addCategory", { cateExist });
   } catch (error) {
     console.log(error.message);
   }
@@ -123,6 +124,11 @@ const loadAddCategory = async (req, res) => {
 const insertCategory = async (req, res) => {
   const { categoryName, description } = req.body;
   try {
+    const existingCategory = await Category.findOne({ category: categoryName });
+    if (existingCategory) {
+      req.flash("cateExist", "category already exist");
+      return res.redirect("/add-category");
+    }
     const newCategory = new Category({
       category: categoryName,
       description,
@@ -169,8 +175,8 @@ const loadEditCategory = async (req, res) => {
 
 const verifyEditCategory = async (req, res) => {
   const { categoryName, description } = req.body;
+  const id = req.params.id;
   try {
-    const id = req.params.id;
     await Category.findByIdAndUpdate(id, {
       category: categoryName,
       description,
@@ -277,13 +283,21 @@ const loadAddProduct = async (req, res) => {
     const threeImage = req.flash("threeImage");
     const category = await Category.find();
     const brand = await Brand.find();
-    res.render("addProduct", { category, brand, threeImage });
+    const err = req.flash("err");
+    res.render("addProduct", { category, brand, threeImage, err });
   } catch (error) {
     console.log(error.message);
   }
 };
 
 const insertProduct = async (req, res) => {
+  const { product_price, product_stock } = req.body;
+  const price = parseFloat(product_price);
+  const stock = parseInt(product_stock);
+  // if (!isNaN(price) || price <= 0 || isNaN(stock) || stock < 0) {
+  //   req.flash("err", "price must be positive and stock be 0 or more");
+  //   return res.redirect("/add-product");
+  // }
   try {
     if (req.files.length < 3) {
       req.flash("threeImage", "At least images be added");
@@ -331,7 +345,9 @@ const unPublishProduct = async (req, res) => {
 const loadEditProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const data = await Product.findById(id);
+    const data = await Product.findById(id)
+      .populate("brand", "brand")
+      .populate("category", "category");
     const category = await Category.find();
     const brand = await Brand.find();
     if (!data) {

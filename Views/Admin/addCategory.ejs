@@ -18,6 +18,13 @@
 </head>
 
 <body>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+    </style>
+    
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" style="background-color: #0D0C11;" id="offcanvas_aside">
         <div class="aside-top">
@@ -89,22 +96,23 @@
                     <div class="content-header">
                         <h2 class="content-title">Add Category</h2>
                     </div>
+                    <p style="color: red;"><%= cateExist %></p>
                 </div>
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
                             <form action="/insert-category" method="post" onsubmit="return validateForm()">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Category</label>
-                                    <input style="background-color: #0D0C11; color: white;" type="text" placeholder="Type here" class="form-control" id="category_name"
-                                        name="categoryName">
+                                    <label for="category_name" class="form-label">Category</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="text" placeholder="Type here" class="form-control" id="category_name" name="categoryName">
+                                    <span id="categoryError" class="error-message"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea id="category_description" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4"
-                                        name="description"></textarea>
+                                    <textarea id="category_description" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                                    <span id="descriptionError" class="error-message"></span>
                                 </div>
-                                <input class="btn btn-secondary" type="submit" name="" value="Add" id="">
+                                <input class="btn btn-secondary" type="submit" value="Add">
                             </form>
                         </div>
                     </div> <!-- card end// -->
@@ -131,24 +139,26 @@
 
     <script>
         function validateForm(){
-            const category_name = document.getElementById('category_name').value.trim()
-            const category_description = document.getElementById('category_description').value.trim()
-
-            if (category_name === "" || category_description === "") {
-                alert('all fields required')
-                return false
+            document.getElementById("categoryError").innerText = "";
+            document.getElementById("descriptionError").innerText = "";
+    
+            const category_name = document.getElementById('category_name').value.trim();
+            const category_description = document.getElementById('category_description').value.trim();
+    
+            let isValid = true;
+    
+            if (category_name === "") {
+                document.getElementById("categoryError").innerText = "Category name is required.";
+                isValid = false;
             }
-
-            if (category_name.length === 0) {
-                alert('name must be required')
-                return false
+    
+            // Validate category description
+            if (category_description === "") {
+                document.getElementById("descriptionError").innerText = "Description is required.";
+                isValid = false;
             }
-
-            if (category_description.length === 0) {
-                alert('description must be required')
-                return false
-            }
-            return true
+    
+            return isValid; // Only allow form submission if all validations pass
         }
     </script>
 

@@ -85,20 +85,20 @@
         </header>
         <section class="content-main">
             <div class="row">
-                <form action="/insert-product" method="post" onsubmit="return validateForm()"
-                    enctype="multipart/form-data">
+                <form action="/insert-product" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
                     <div class="col-9">
                         <div class="content-header">
-
                             <h2 class="content-title">Add New Product</h2>
-                            <p style="color: red;">
-                                <%= threeImage %>
-                            </p>
                             <div>
                                 <button type="submit" class="btn btn-md rounded font-sm hover-up btn-dark">Add</button>
                             </div>
                         </div>
+                        <p style="color: red;">
+                            <%= threeImage %>
+                            <%= err %>
+                        </p>
                     </div>
+                    
                     <div class="col-lg-6">
                         <div class="card mb-4">
                             <div class="card-header">
@@ -107,54 +107,50 @@
                             <div class="card-body">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
-                                    <input name="product_title" style="background-color: #0D0C11; color: white;"
-                                        type="text" placeholder="Type here" class="form-control" id="product_name">
+                                    <input name="product_title" style="background-color: #0D0C11; color: white;" type="text" placeholder="Type here" class="form-control" id="product_name">
+                                    <span id="nameError" class="error-message"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea id="product_description" name="product_description"
-                                        style="background-color: #0D0C11; color: white;" placeholder="Type here"
-                                        class="form-control" rows="4"></textarea>
+                                    <textarea id="product_description" name="product_description" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4"></textarea>
+                                    <span id="descriptionError" class="error-message"></span>
                                 </div>
                                 <div class="row">
                                     <div class="mb-4">
                                         <label class="form-label">Price</label>
-                                        <input name="product_price" style="background-color: #0D0C11; color: white;"
-                                            type="text" placeholder="₹" class="form-control" id="product_price">
+                                        <input name="product_price" style="background-color: #0D0C11; color: white;" type="text" placeholder="₹" class="form-control" id="product_price">
+                                        <span id="priceError" class="error-message"></span>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="form-label">Category</label>
-                                        <select name="product_category" style="background-color: #0D0C11; color: white;"
-                                            class="form-select">
+                                        <select name="product_category" style="background-color: #0D0C11; color: white;" class="form-select">
                                             <% category.forEach(data=> { %>
                                                 <option value="<%= data._id %>">
                                                     <%= data.category %>
                                                 </option>
-                                                <% }) %>
+                                            <% }) %>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="form-label">Brand</label>
-                                        <select name="product_brand" style="background-color: #0D0C11; color: white;"
-                                            class="form-select">
+                                        <select name="product_brand" style="background-color: #0D0C11; color: white;" class="form-select">
                                             <% brand.forEach(data=>{ %>
                                                 <option value="<%= data._id %>">
                                                     <%= data.brand %>
                                                 </option>
-                                                <% }) %>
+                                            <% }) %>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="form-label">Stock</label>
-                                        <input id="product_stock" name="product_stock"
-                                            style="background-color: #0D0C11; color: white;" type="number"
-                                            placeholder="stock" class="form-control">
+                                        <input id="product_stock" name="product_stock" style="background-color: #0D0C11; color: white;" type="number" placeholder="stock" class="form-control">
+                                        <span id="stockError" class="error-message"></span>
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- card end// -->
-
+                        </div>
                     </div>
+                
                     <div class="col-lg-3">
                         <div class="card mb-4">
                             <div class="card-header">
@@ -163,11 +159,11 @@
                             <div class="card-body">
                                 <div class="input-upload">
                                     <img src="assets/imgs/theme/upload.svg" alt="">
-                                    <input id="product_image" accept="image/*" name="image" class="form-control"
-                                        type="file" multiple required>
+                                    <input id="product_image" accept="image/*" name="image" class="form-control" type="file" multiple required>
+                                    <span id="imageError" class="error-message"></span>
                                 </div>
                             </div>
-                        </div> <!-- card end// -->
+                        </div>
                     </div>
                 </form>
             </div>
@@ -190,28 +186,54 @@
 
     <script>
         function validateForm() {
-            const product_name = document.getElementById('product_name').value.trim()
-            const product_description = document.getElementById('product_description').value.trim()
-            const product_price = document.getElementById('product_price').value.trim()
-            const product_stock = document.getElementById('product_stock').value.trim()
-            const product_image = document.querySelector('input[name="product_image"]').files
-
-            if (product_name === "" || product_description === "" || product_price === "" || product_image.length === 0) {
-                alert('all fields required')
-                return false
+            document.getElementById('nameError').innerText = "";
+            document.getElementById('descriptionError').innerText = "";
+            document.getElementById('priceError').innerText = "";
+            document.getElementById('stockError').innerText = "";
+            document.getElementById('imageError').innerText = "";
+    
+            const product_name = document.getElementById('product_name').value.trim();
+            const product_description = document.getElementById('product_description').value.trim();
+            const product_price = document.getElementById('product_price').value.trim();
+            const product_stock = document.getElementById('product_stock').value.trim();
+            const product_image = document.querySelector('input[name="image"]').files;
+    
+            let isValid = true;
+    
+            if (product_name === "") {
+                document.getElementById('nameError').innerText = "Product title is required.";
+                isValid = false;
             }
-
-            if (isNaN(product_price) || product_price <= 0) {
-                alert('enter valid price')
-                return false
+    
+            if (product_description === "") {
+                document.getElementById('descriptionError').innerText = "Full description is required.";
+                isValid = false;
             }
-            
-            if(isNaN(product_stock)|| product_stock<=0){
-                alert('Stock must be positive or must be filled')
-                return false
+    
+            if (product_price === "" || isNaN(product_price) || product_price <= 0) {
+                document.getElementById('priceError').innerText = "Enter a valid price.";
+                isValid = false;
             }
-            return true
+    
+            if (product_stock === "" || isNaN(product_stock) || product_stock <= 0) {
+                document.getElementById('stockError').innerText = "Stock must be a positive number.";
+                isValid = false;
+            }
+    
+            if (product_image.length < 3) {
+                document.getElementById('imageError').innerText = "At least 3 image is required.";
+                isValid = false;
+            }
+    
+            return isValid;
         }
     </script>
+
+    <style>
+        .error-message {
+        color: red;
+        font-size: 0.875em;
+    }
+    </style>
 
     <%- include('footer.ejs') %>

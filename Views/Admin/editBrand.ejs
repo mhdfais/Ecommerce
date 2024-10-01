@@ -93,16 +93,16 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <form action="/edit-brand/<%= data._id %>" method="post">
+                            <form action="/edit-brand/<%= data._id %>" method="post" onsubmit="return validateForm()">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Brand</label>
-                                    <input type="text" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" id="product_name"
-                                        name="brandName" value="<%= data.brand %>">
+                                    <label for="brand_name" class="form-label">Brand</label>
+                                    <input type="text" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" id="brand_name" name="brandName" value="<%= data.brand %>">
+                                    <span id="brandError" class="error-message"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4"
-                                        name="description"><%= data.description %></textarea>
+                                    <textarea style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4" id="brand_description" name="description"><%= data.description %></textarea>
+                                    <span id="descriptionError" class="error-message"></span>
                                 </div>
                                 <input class="btn btn-primary" type="submit" name="" value="Update" id="">
                             </form>
@@ -129,5 +129,35 @@
         </footer>
     </main>
 
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            document.getElementById('brandError').innerText = "";
+            document.getElementById('descriptionError').innerText = "";
+    
+            const brand_name = document.getElementById('brand_name').value.trim();
+            const brand_description = document.getElementById('brand_description').value.trim();
+    
+            let isValid = true;
+    
+            if (brand_name === "") {
+                document.getElementById('brandError').innerText = "Brand name is required.";
+                isValid = false;
+            }
+    
+            if (brand_description === "") {
+                document.getElementById('descriptionError').innerText = "Brand description is required.";
+                isValid = false;
+            }
+    
+            return isValid;
+        }
+    </script>
 
     <%- include('footer.ejs') %>

@@ -3,7 +3,10 @@ const app = express();
 require("dotenv").config();
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/ecommerce");
+mongoose
+  .connect(process.env.DATABASE_URL)
+  .then(() => console.log("connected to database"))
+  .catch((err) => console.log("could not connect to db", err));
 
 const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));

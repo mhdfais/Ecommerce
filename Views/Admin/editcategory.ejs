@@ -93,16 +93,16 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <form action="/edit-category/<%= data._id %>" method="post">
+                            <form action="/edit-category/<%= data._id %>" method="post" onsubmit="return validateForm()">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Category</label>
-                                    <input type="text" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" id="product_name"
-                                        name="categoryName" value="<%= data.category %>">
+                                    <label for="category_name" class="form-label">Category</label>
+                                    <input type="text" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" id="category_name" name="categoryName" value="<%= data.category %>">
+                                    <span id="categoryError" class="error-message"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4"
-                                        name="description" ><%= data.description %></textarea>
+                                    <textarea style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4" id="category_description" name="description"><%= data.description %></textarea>
+                                    <span id="descriptionError" class="error-message"></span>
                                 </div>
                                 <input class="btn btn-primary" type="submit" name="" value="Update" id="">
                             </form>
@@ -129,5 +129,35 @@
         </footer>
     </main>
 
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+    </style>
+    
+    <script>
+        function validateForm() {
+            document.getElementById('categoryError').innerText = "";
+            document.getElementById('descriptionError').innerText = "";
+    
+            const category_name = document.getElementById('category_name').value.trim();
+            const category_description = document.getElementById('category_description').value.trim();
+    
+            let isValid = true;
+    
+            if (category_name === "") {
+                document.getElementById('categoryError').innerText = "Category name is required.";
+                isValid = false;
+            }
+    
+            if (category_description === "") {
+                document.getElementById('descriptionError').innerText = "Category description is required.";
+                isValid = false;
+            }
+    
+            return isValid; 
+        }
+    </script>
 
     <%- include('footer.ejs') %>

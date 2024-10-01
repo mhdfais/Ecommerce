@@ -85,14 +85,11 @@
         </header>
         <section class="content-main">
             <div class="row">
-                <form action="/edit-product/<%= data._id %>" method="post" enctype="multipart/form-data">
+                <form action="/edit-product/<%= data._id %>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div class="col-9">
                         <div class="content-header">
-
                             <h2 class="content-title">Edit Product</h2>
-                            <p style="color: red;">
-                                <%= threeImage %>
-                            </p>
+                            <p style="color: red;"><%= threeImage %></p>
                             <div>
                                 <button type="submit" class="btn btn-md rounded font-sm hover-up btn-dark">Add</button>
                             </div>
@@ -106,57 +103,44 @@
                             <div class="card-body">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
-                                    <input name="product_title" style="background-color: #0D0C11; color: white;"
-                                        type="text" placeholder="Type here" class="form-control"
-                                        value="<%= data.title %>" id="product_name">
+                                    <input name="product_title" style="background-color: #0D0C11; color: white;" type="text" placeholder="Type here" class="form-control" value="<%= data.title %>" id="product_name">
+                                    <span id="productNameError" class="error-message"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea id="product_description" name="product_description"
-                                        style="background-color: #0D0C11; color: white;" placeholder="Type here"
-                                        class="form-control" rows="4"><%= data.description %></textarea>
+                                    <textarea id="product_description" name="product_description" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4"><%= data.description %></textarea>
+                                    <span id="productDescriptionError" class="error-message"></span>
                                 </div>
                                 <div class="row">
                                     <div class="mb-4">
                                         <label class="form-label">Price</label>
-                                        <input name="product_price" style="background-color: #0D0C11; color: white;"
-                                            type="text" placeholder="₹" class="form-control" id="product_price"
-                                            value="<%= data.price %>">
+                                        <input name="product_price" style="background-color: #0D0C11; color: white;" type="text" placeholder="₹" class="form-control" id="product_price" value="<%= data.price %>">
+                                        <span id="productPriceError" class="error-message"></span>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="form-label">Category</label>
-                                        <select name="product_category" style="background-color: #0D0C11; color: white;"
-                                            class="form-select">
-                                            <% category.forEach(data=> { %>
-                                                <option value="<%= data._id %>"
-                                                    <%=data._id.equals(data.product_category)?'selected':'' %>>
-                                                    <%= data.category %>
-                                                </option>
-                                                <% }) %>
+                                        <select name="product_category" style="background-color: #0D0C11; color: white;" class="form-select">
+                                            <% category.forEach(data => { %>
+                                                <option value="<%= data._id %>" <%= data._id.equals(data.product_category) ? 'selected' : '' %>><%= data.category %></option>
+                                            <% }) %>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="form-label">Brand</label>
-                                        <select name="product_brand" style="background-color: #0D0C11; color: white;"
-                                            class="form-select">
-                                            <% brand.forEach(data=>{ %>
-                                                <option value="<%= data._id %>"
-                                                    <%=data._id.equals(data.product_brand)?'selected':'' %>>
-                                                    <%= data.brand %>
-                                                </option>
-                                                <% }) %>
+                                        <select name="product_brand" style="background-color: #0D0C11; color: white;" class="form-select">
+                                            <% brand.forEach(data => { %>
+                                                <option value="<%= data._id %>" <%= data._id.equals(data.product_brand) ? 'selected' : '' %>><%= data.brand %></option>
+                                            <% }) %>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="form-label">Stock</label>
-                                        <input id="product_stock" name="product_stock"
-                                            style="background-color: #0D0C11; color: white;" type="number"
-                                            placeholder="stock" class="form-control" value="<%= data.stock %>">
+                                        <input id="product_stock" name="product_stock" style="background-color: #0D0C11; color: white;" type="number" placeholder="stock" class="form-control" value="<%= data.stock %>">
+                                        <span id="productStockError" class="error-message"></span>
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- card end// -->
-
+                        </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="card mb-4">
@@ -166,11 +150,11 @@
                             <div class="card-body">
                                 <div class="input-upload">
                                     <img src="/uploads/<%= data.images[0] %>" alt="">
-                                    <input id="product_image" accept="image/*" name="image" class="form-control"
-                                        type="file" multiple>
+                                    <input id="product_image" accept="image/*" name="image" class="form-control" type="file" multiple>
+                                    <span id="productImageError" class="error-message"></span>
                                 </div>
                             </div>
-                        </div> <!-- card end// -->
+                        </div>
                     </div>
                 </form>
             </div>
@@ -190,5 +174,54 @@
             </div>
         </footer>
     </main>
+
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            document.getElementById('productNameError').innerText = "";
+            document.getElementById('productDescriptionError').innerText = "";
+            document.getElementById('productPriceError').innerText = "";
+            document.getElementById('productStockError').innerText = "";
+            document.getElementById('productImageError').innerText = "";
+    
+            const product_name = document.getElementById('product_name').value.trim();
+            const product_description = document.getElementById('product_description').value.trim();
+            const product_price = document.getElementById('product_price').value.trim();
+            const product_stock = document.getElementById('product_stock').value.trim();
+            const product_image = document.querySelector('input[name="image"]').files;
+    
+            let isValid = true;
+    
+            if (product_name === "") {
+                document.getElementById('productNameError').innerText = "Product title is required.";
+                isValid = false;
+            }
+    
+            if (product_description === "") {
+                document.getElementById('productDescriptionError').innerText = "Product description is required.";
+                isValid = false;
+            }
+    
+            if (isNaN(product_price) || product_price <= 0) {
+                document.getElementById('productPriceError').innerText = "Enter a valid price.";
+                isValid = false;
+            }
+    
+            if (isNaN(product_stock) || product_stock <= 0) {
+                document.getElementById('productStockError').innerText = "Stock must be positive.";
+                isValid = false;
+            }
+    
+            
+    
+            return isValid; 
+        }
+    </script>
 
     <%- include('footer.ejs') %>

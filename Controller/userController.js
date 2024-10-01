@@ -1,4 +1,3 @@
-const { error } = require("console");
 const User = require("../Models/userModel");
 const userOtpVerification = require("../Models/userOtpVerification");
 const Product = require("../Models/product");
@@ -7,6 +6,7 @@ const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const product = require("../Models/product");
 const crypto = require("crypto");
+const Address = require("../Models/address");
 
 // ------------------------------------------------  NODEMAILER  -----------------------------------------------
 
@@ -89,6 +89,7 @@ const loadOtpVerification = async (req, res) => {
 };
 
 const sendOtpVerificationEmail = async ({ _id, email }, res) => {
+  // here newUser from insertUser object destructured and extract it to _id and email now
   try {
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
     const mailOptions = {
@@ -205,18 +206,64 @@ const loadRegister = async (req, res) => {
   }
 };
 
+// const insertUser = async (req, res) => {
+//   const { name, email, phno, pswd, confirmPswd } = req.body;
+//   if (pswd !== confirmPswd) {
+//     req.flash("pswdMatch", "Passwords do not match");
+//     return res.redirect("/register");
+//   }
+//   try {
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       req.flash("emailExist", "User already exists");
+//       return res.redirect("/register");
+//     }
+//     const hashedPswd = await bcrypt.hash(pswd, 10);
+//     const newUser = new User({
+//       name,
+//       email,
+//       phno,
+//       pswd: hashedPswd,
+//     });
+//     await newUser.save();
+
+//     await sendOtpVerificationEmail(newUser, res);
+//     res.redirect(`/otp-verification?userId=${newUser._id}`);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 const insertUser = async (req, res) => {
   const { name, email, phno, pswd, confirmPswd } = req.body;
+
   if (pswd !== confirmPswd) {
     req.flash("pswdMatch", "Passwords do not match");
     return res.redirect("/register");
   }
+
   try {
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
-      req.flash("emailExist", "User already exists");
-      return res.redirect("/register");
+      if (!existingUser.isVerified) {
+        const hashedPswd = await bcrypt.hash(pswd, 10);
+        existingUser.name = name;
+        existingUser.phno = phno;
+        existingUser.pswd = hashedPswd;
+        await existingUser.save();
+
+        await userOtpVerification.deleteOne({ userId: existingUser._id });
+
+        await sendOtpVerificationEmail(existingUser, res);
+
+        return res.redirect(`/otp-verification?userId=${existingUser._id}`);
+      } else {
+        req.flash("emailExist", "User already exists and please login");
+        return res.redirect("/register");
+      }
     }
+
     const hashedPswd = await bcrypt.hash(pswd, 10);
     const newUser = new User({
       name,
@@ -226,53 +273,12 @@ const insertUser = async (req, res) => {
     });
     await newUser.save();
 
-    await sendOtpVerificationEmail(newUser, res);
+    await sendOtpVerificationEmail(newUser, res); // newUser passing as an object represents the mongoDB database, this may contain id, name, email.....
     res.redirect(`/otp-verification?userId=${newUser._id}`);
   } catch (error) {
     console.log(error);
   }
 };
-
-// const insertUser = async (req, res) => {
-//   const { name, email, pswd, confirmPswd, phno } = req.body;
-
-//   if (pswd != confirmPswd) {
-//     req.flash("pswdMatch", "Passwords do not match");
-//     return res.redirect("/register");
-//   }
-
-//   try {
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       if (!existingUser.isVerified) {
-//         const hashedPswd = await bcrypt.hash(pswd, 10);
-//         existingUser.name = name;
-//         existingUser.phno = phno;
-//         existingUser.pswd = hashedPswd;
-//         await existingUser.save();
-
-//         await userOtpVerification.deleteOne({ userId: existingUser._id });
-
-//         return res.redirect(`/otp-verification?userId=${existingUser._id}`);
-//       } else {
-//         req.flash("emailExist", "User already exists");
-//         return res.redirect("/register");
-//       }
-//     }
-
-//     const hashedPswd = await bcrypt.hash(pswd, 10);
-//     const newUser = new User({
-//       name,
-//       email,
-//       phno,
-//       pswd: hashedPswd,
-//     });
-//     await newUser.save();
-//     res.redirect(`/otp-verification?userId=${newUser._id}`);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 // ------------------------------------------------  LOGIN -------------------------------------------------
 
@@ -294,7 +300,7 @@ const verifyLogin = async (req, res) => {
       return res.redirect("/login");
     }
 
-    req.session.user = user;
+    req.session.user = { email: user.email, _id: user._id };
     // console.log(req.session.user)
     res.redirect("/home");
   } catch (error) {
@@ -327,13 +333,29 @@ const loadLogin = async (req, res) => {
 
 // --------------------------------------------------  HOME  -----------------------------------------------
 
+// const loadHome = async (req, res) => {
+//   try {
+//     const products = await Product.find({ isPublished: true }).populate(
+//       "category",
+//       "category"
+//     );
+//     res.render("home", { products });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
+
 const loadHome = async (req, res) => {
   try {
-    const products = await Product.find({ isPublished: true }).populate(
-      "category",
-      "category"
-    );
-    res.render("home", { products });
+    const products = await Product.find({ isPublished: true }).populate({
+      path: "category",
+      match: { isListed: true }, // Only include categories that are listed
+      select: "category", // Select the category name (or other fields if needed)
+    });
+
+    const filteredProducts = products.filter((product) => product.category); // Filter out products that have no category (due to unlisted categories)
+
+    res.render("home", { products: filteredProducts });
   } catch (error) {
     console.log(error.message);
   }
@@ -473,6 +495,203 @@ const logout = async (req, res) => {
   }
 };
 
+//----------------------------------------------  ACCOUNT  -------------------------------------------------------
+
+const loadProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const matchPswd = req.flash("matchPswd");
+    const sameOldPswd = req.flash("sameOldPswd");
+    res.render("profile", { user, matchPswd, sameOldPswd });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const verifyEditProfile = async (req, res) => {
+  const id = req.params.id;
+  const { name, phno } = req.body;
+  try {
+    await User.findByIdAndUpdate(id, {
+      name,
+      phno,
+    });
+    res.redirect("/profile");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const verifyChangePassword = async (req, res) => {
+  const id = req.params.id;
+  const { pswd, newPswd, confirmNewPswd } = req.body;
+  try {
+    const user = await User.findById(id);
+    const isMatch = await bcrypt.compare(pswd, user.pswd);
+    if (!isMatch) {
+      req.flash("matchPswd", "current password is incorrect");
+      return res.redirect("/profile");
+    }
+
+    const isSamePassword = await bcrypt.compare(newPswd, user.pswd);
+    if (isSamePassword) {
+      req.flash(
+        "sameOldPswd",
+        "New password cannot be the same as the old password"
+      );
+      return res.redirect("/profile");
+    }
+
+    const hashedOtp = await bcrypt.hash(newPswd, 10);
+    user.pswd = hashedOtp;
+    await user.save();
+
+    return res.redirect("/profile");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const addressData = await Address.findOne({ userId: user._id });
+
+    const addresses = addressData ? addressData.addressDetails : [];
+
+    res.render("address", { addressData: addresses });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const loadAddAddress = async (req, res) => {
+  try {
+    res.render("addAddress");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const verifyAddAddress = async (req, res) => {
+  try {
+    const { address, pincode, state, country, city } = req.body;
+    const userId = req.session.user._id;
+
+    let userAddress = await Address.findOne({ userId });
+    if (!userAddress) {
+      userAddress = new Address({
+        userId: userId,
+        addressDetails: [
+          {
+            address,
+            country,
+            state,
+            city,
+            pincode,
+          },
+        ],
+      });
+    } else {
+      userAddress.addressDetails.push({
+        address,
+        country,
+        state,
+        pincode,
+        city,
+      });
+    }
+
+    await userAddress.save();
+
+    res.redirect("/address");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const verifyEditAddress = async (req, res) => {
+  try {
+    const { addressId, address, city, state, country, pincode } = req.body;
+
+    await Address.updateOne(
+      { "addressDetails._id": addressId },
+      {
+        $set: {
+          "addressDetails.$.address": address,
+          "addressDetails.$.city": city,
+          "addressDetails.$.state": state,
+          "addressDetails.$.country": country,
+          "addressDetails.$.pincode": pincode,
+        },
+      }
+    );
+
+    res.redirect("/address");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+const loadEditAddress = async (req, res) => {
+  try {
+    const addressId = req.params.id;
+    // const userId=req.session.user._id
+    const address = await Address.findOne({ "addressDetails._id": addressId });
+    // console.log(address)
+    if (!address) {
+      return res.send("Address not found");
+    }
+
+    const addressDetail = address.addressDetails.find(
+      (detail) => detail._id == addressId //  it searches within the addressDetails array to get the specific address to be edited.
+    );
+
+    if (!addressDetail) {
+      return res.send("address detail not found");
+    }
+
+    res.render("editAddress", { addressDetail });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const deleteAddress = async (req, res) => {
+  try {
+    const { addressId } = req.params;
+
+    const result = await Address.updateOne(
+      { "addressDetails._id": addressId },
+      {
+        $pull: {
+          addressDetails: { _id: addressId },
+        },
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    res.status(200).json({ message: "Address deleted successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error: Unable to delete address" });
+  }
+};
+
+// ----------------------------------------  CART  ----------------------------------------------------------
+
+const loadCart = async (req, res) => {
+  try {
+    res.render("cart");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   loadRegister,
   loadLogin,
@@ -488,4 +707,14 @@ module.exports = {
   verifyForgotPasswordEmail,
   resetPassword,
   logout,
+  loadProfile,
+  verifyEditProfile,
+  verifyChangePassword,
+  loadAddress,
+  verifyAddAddress,
+  verifyEditAddress,
+  deleteAddress,
+  loadAddAddress,
+  loadEditAddress,
+  loadCart,
 };

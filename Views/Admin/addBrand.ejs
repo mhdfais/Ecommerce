@@ -96,15 +96,14 @@
                         <div class="card-body">
                             <form action="/insert-brand" method="post" onsubmit="return validateForm()">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Brand</label>
-                                    <input style="background-color: #0D0C11; color: white;" type="text"
-                                        placeholder="Type here" class="form-control" id="brand" name="brandName">
+                                    <label for="brand_name" class="form-label">Brand</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="text" placeholder="Type here" class="form-control" id="brand_name" name="brandName">
+                                    <span id="brandError" class="error-message"></span>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea id="brand_description" style="background-color: #0D0C11; color: white;"
-                                        placeholder="Type here" class="form-control" rows="4"
-                                        name="description"></textarea>
+                                    <textarea id="brand_description" style="background-color: #0D0C11; color: white;" placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                                    <span id="descriptionError" class="error-message"></span>
                                 </div>
                                 <input class="btn btn-secondary" type="submit" name="" value="Add" id="">
                             </form>
@@ -131,26 +130,34 @@
         </footer>
     </main>
 
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+    </style>
+
     <script>
         function validateForm() {
-            const brand_name = document.getElementById('brand_name').value.trim()
-            const brand_description = document.getElementById('brand_description').value.trim()
-
-            if (brand_name === "" || brand_description === "") {
-                alert('all fields required')
-                return false
+            document.getElementById('brandError').innerText = "";
+            document.getElementById('descriptionError').innerText = "";
+    
+            const brand_name = document.getElementById('brand_name').value.trim();
+            const brand_description = document.getElementById('brand_description').value.trim();
+    
+            let isValid = true;
+    
+            if (brand_name === "") {
+                document.getElementById('brandError').innerText = "Brand name is required.";
+                isValid = false;
             }
-
-            if (brand_name.length === 0) {
-                alert('name must be required')
-                return false
+    
+            if (brand_description === "") {
+                document.getElementById('descriptionError').innerText = "Brand description is required.";
+                isValid = false;
             }
-
-            if (brand_description.length === 0) {
-                alert('description must be required')
-                return false
-            }
-            return true
+    
+            return isValid; 
         }
     </script>
 
