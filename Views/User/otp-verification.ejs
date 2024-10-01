@@ -1,29 +1,199 @@
-<% include('../Layout/header.ejs') %>
+<%- include('header.ejs') %>
 
-    <link rel="stylesheet" href=" reg-style.css">
+    <!-- <link rel="stylesheet" href="user/reg-style.css"> -->
+
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .company_logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .company_logo img {
+            width: 121px;
+            height: auto;
+        }
+
+        /* Card */
+        .card {
+            padding: 20px;
+            /* Inner padding for card */
+            border-radius: 8px;
+        }
+
+        /* Card Title */
+        .card_title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card_title h1 {
+            font-size: 22px;
+            color: #333;
+        }
+
+        /* Error Messages */
+        p {
+            font-size: 14px;
+            color: red;
+            /* Error message color */
+            text-align: center;
+            /* Center-align error messages */
+        }
+
+        /* Form */
+        .form {
+            display: flex;
+            flex-direction: column;
+            /* Stack inputs vertically */
+        }
+
+        .form input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form input[type="text"]:focus {
+            border-color: #4a90e2;
+            /* Highlight on focus */
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
+            /* Button color */
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            /* Smooth transition */
+        }
+
+        button:hover {
+            background-color: #357ABD;
+            /* Darker button color on hover */
+        }
+
+        /* Timer and Resend Link */
+        #timer {
+            font-size: 12px;
+            /* Increased font size for visibility */
+            color: #333;
+            /* Timer color */
+            background-color: #ff6f6f;
+            /* Background for contrast */
+            padding: 5px 10px;
+            /* Padding around the timer */
+            border-radius: 5px;
+            /* Rounded corners */
+            text-align: center;
+            /* Center the timer text */
+            margin-bottom: 10px;
+            /* Space below the timer */
+        }
+
+        #resendOtpContainer {
+            text-align: right;
+            /* Align resend link to the right */
+            font-size: 14px;
+            /* Resend link font size */
+        }
+
+        #resendOtpContainer a {
+            color: #4a90e2;
+            /* Resend link color */
+            text-decoration: none;
+            /* Remove underline */
+        }
+
+        #resendOtpContainer a:hover {
+            text-decoration: underline;
+            /* Underline on hover */
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                /* Padding adjustment */
+            }
+
+            .card_title h1 {
+                font-size: 20px;
+                /* Adjust for smaller screens */
+            }
+
+            button {
+                font-size: 14px;
+                /* Adjust for smaller screens */
+            }
+
+            #timer {
+                font-size: 14px;
+                /* Adjust timer font size for smaller screens */
+            }
+        }
+    </style>
+
     <div class="container">
-        <div class="card" style="height: 240px;">
-            <div class="card_title">
-                <h1>OTP Verification</h1>
+        <div class="card">
+            <div class="company_logo">
+                <img src="user/logo-11.svg" style="width: 121px; height: 60px;" alt="">
             </div>
-            <p style="color: red;text-align: center;"><%= expired %></p>
+        </div>
+        <div class="card_title">
+            <h1>OTP Verification</h1>
+        </div>
+        <p style="color: red;text-align: center;">
+            <%= invalid %>
+        </p>
 
-            <div class="form">
-                <form action="/verify-otp" method="post">
-                    <input type="hidden" name="userId" value="<%= userId %>">
-                    <input type="text" name="otp" placeholder="OTP" id="" required="true" />
-                    <div style="display: flex; justify-content: space-between;">
-                        <div>
-                            <p style="color: white;" id="timer">05:00</p>
-                        </div>
-                        <div><a href="/resendOtp?userId=<%= userId %>">Resend OTP</a></div>
+        <div class="form">
+            <form action="/verify-otp" method="post">
+                <input type="hidden" name="userId" value="<%= userId %>">
+                <input type="text" name="otp" placeholder="OTP" id="" required="true" />
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <p style="color: white;" id="timer">05:00</p>
                     </div>
-                    <button>Validate</button>
-                </form>
-
-            </div>
+                    <div id="resendOtpContainer" style="display: none;"><a href="/resendOtp?userId=<%= userId %>">Resend
+                            OTP</a></div>
+                </div>
+                <button>Validate</button>
+            </form>
 
         </div>
+
+    </div>
 
     </div>
 
@@ -32,16 +202,15 @@
         const currentTime = Date.now();
         let timeLeft = Math.floor((expiresAt - currentTime) / 1000); // Remaining seconds
 
-        // Get the timer element from the HTML
-        const timerElement = document.getElementById("timer");
+        const timerElement = document.getElementById("timer");// Get the timer and Resend OTP container element from the HTML
+        const resendOtpContainer = document.getElementById("resendOtpContainer");
 
-        // Function to update the timer display every second
-        const countdownTimer = setInterval(() => {
+        const countdownTimer = setInterval(() => {// Function to update the timer display every second
             if (timeLeft <= 0) {
                 clearInterval(countdownTimer);
                 timerElement.textContent = "OTP Expired";
-                // Optionally, disable the submit button after OTP expiry
-                document.querySelector("button").disabled = true;
+                document.querySelector("button").disabled = true;// disable the submit button after OTP expiry
+                resendOtpContainer.style.display = "block";// Show the Resend OTP link when OTP is expired
             } else {
                 let minutes = Math.floor(timeLeft / 60);
                 let seconds = timeLeft % 60;
@@ -52,4 +221,4 @@
         }, 1000);
     </script>
 
-    <% include('../Layout/footer.ejs') %>
+    <%- include('footer.ejs') %>

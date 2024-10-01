@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const { type } = require("os");
-const { boolean } = require("webidl-conversions");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,12 +19,14 @@ const userSchema = new mongoose.Schema({
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   isBlocked: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 module.exports = mongoose.model("User", userSchema);

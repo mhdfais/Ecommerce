@@ -1,28 +1,199 @@
-<% include('../Layout/header.ejs') %>
+<%- include('header.ejs') %>
 
-    <link rel="stylesheet" href=" reg-style.css">
+    
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .company_logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .company_logo img {
+            width: 121px;
+            height: auto;
+        }
+
+        .card_title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card_title h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .card_title span {
+            display: block;
+            font-size: 14px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form input[type="text"],
+        .form input[type="email"],
+        .form input[type="tel"],
+        .form input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form input[type="text"]:focus,
+        .form input[type="email"]:focus,
+        .form input[type="tel"]:focus,
+        .form input[type="password"]:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        p {
+            font-size: 14px;
+            color: red;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .card_title h1 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+
     <div class="container">
         <div class="card">
+            <div class="company_logo">
+                <img src="user/logo-11.svg" style="width: 121px; height: 60px;" alt="">
+            </div>
+
             <div class="card_title">
                 <h1>Create Account</h1>
-                <span>Already have an account? <a href="">Sign In</a></span>
+                <span>Already have an account? <a href="/login">Sign In</a></span>
             </div>
-            <p style="color: red;text-align: center;"><%= emailExist %></p>
-            <p style="color: red;text-align: center;"><%= pswdMatch %></p>
+
+            <p style="color: red;text-align: center;">
+                <%= emailExist %>
+            </p>
+            <p style="color: red;text-align: center;">
+                <%= pswdMatch %>
+            </p>
+
             <div class="form">
-                <form action="/register" method="post">
-                    <input type="text" name="name" id="username" placeholder="Name" required="true" />
+                <form action="/register" method="post" onsubmit="return validateForm()">
+                    <input type="text" name="name" id="name" placeholder="Name" required="true" />
                     <input type="email" name="email" placeholder="Email" id="email" required="true" />
-                    <input type="tel" name="phno" placeholder="phone number" id="password" required="true" />
-                    <input type="password" name="pswd" placeholder="Password" id="" required="true" />
-                    <input type="password" name="confirmPswd" placeholder="Confirm password" id="" required="true" />
-                    <button>Sign Up</button>
+                    <input type="tel" name="phno" placeholder="Phone Number" id="phno" required="true" />
+                    <input type="password" name="pswd" placeholder="Password" id="pswd" required="true" />
+                    <input type="password" name="confirmPswd" placeholder="Confirm Password" id="confirmPswd"
+                        required="true" />
+                    <button type="submit">Sign Up</button>
                 </form>
-
             </div>
-
         </div>
-
     </div>
 
-    <% include('../Layout/footer.ejs') %>
+
+
+
+    <script>
+        function validateForm() {
+            // Get form values
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phno = document.getElementById("phno").value.trim();
+            const password = document.getElementById("pswd").value.trim();
+            const confirmPassword = document.getElementById("confirmPswd").value.trim();
+
+            // Check for empty fields
+            if (name === "" || email === "" || phno === "" || password === "" || confirmPassword === "") {
+                alert("All fields are required.");
+                return false;
+            }
+
+            // Validate name (at least 3 characters)
+            if (name.length === 0) {
+                alert("Name must be at required.")
+                return false;
+            }
+
+            // Validate email format
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            // Validate phone number (numeric and 10 digits)
+            const phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(phno)) {
+                alert("Please enter a valid 10-digit phone number.");
+                return false;
+            }
+
+            // Validate password length (minimum 6 characters)
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long.");
+                return false;
+            }
+
+            // Validate password and confirm password match
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
+            return true; // Allow form submission if all validations pass
+        }
+    </script>
+
+    <%- include('footer.ejs') %>

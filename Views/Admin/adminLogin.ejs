@@ -1,12 +1,24 @@
-<% include('../Layout/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
 
-    <link rel="stylesheet" href=" reg-style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <link rel="stylesheet" href=" user/reg-style.css">
     <div class="container">
         <div class="card" style="height: 350px;">
             <div class="card_title">
                 <h1>Admin Login</h1>
             </div>
-            <p style="color: red;text-align: center;"><%= fail %></p>
+            <p style="color: red;text-align: center;">
+                <%= fail %>
+            </p>
             <div style="padding-top: 35px;" class="form">
                 <form action="/verifyAdmin" method="post">
 
@@ -15,11 +27,13 @@
                     <div style="display: flex; justify-content: space-between;">
                         <!-- <div><p style="color: white;"></p></div>
                         <div><a href=""></a></div> -->
-                     </div>
+                    </div>
                     <button>Login</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <% include('../Layout/footer.ejs') %>
+</body>
+
+</html>
