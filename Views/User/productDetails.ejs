@@ -64,7 +64,7 @@
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/cart">
+                                    <a class="mini-cart-icon" href="/home/cart">
                                         <img alt="Evara"
                                             src="http://localhost:4444/user/imgs/theme/icons/icon-cart.svg">
                                         <span class="pro-count blue">2</span>
@@ -101,7 +101,7 @@
                                                 <h4>Total <span>$4000.00</span></h4>
                                             </div>
                                             <div class="shopping-cart-button">
-                                                <a href="/cart" class="outline">View cart</a>
+                                                <a href="/home/cart" class="outline">View cart</a>
                                                 <a href="shop-checkout.html">Checkout</a>
                                             </div>
                                         </div>
@@ -313,7 +313,7 @@
                                         </ul> -->
                                     </li>
                                     <li>
-                                        <a href="#">Categories</a>
+                                        <a href="/home/shop">Shop</a>
                                     </li>
                                     <li><a href="#">About<i class="fi-rs-angle-down"></i></a>
                                         <!-- <ul class="sub-menu">
@@ -331,7 +331,7 @@
                                             </li>
                                             <li><a href="shop-filter.html">Shop – Filter</a></li>
                                             <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
-                                            <li><a href="/cart">Shop – Cart</a></li>
+                                            <li><a href="/home/cart">Shop – Cart</a></li>
                                             <li><a href="shop-checkout.html">Shop – Checkout</a></li>
                                             <li><a href="shop-compare.html">Shop – Compare</a></li>
                                         </ul> -->
@@ -440,7 +440,7 @@
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="/cart">
+                                <a class="mini-cart-icon" href="/home/cart">
                                     <img alt="Evara" src="user/imgs/theme/icons/icon-cart.svg">
                                     <span class="pro-count white">2</span>
                                 </a>
@@ -478,7 +478,7 @@
                                             <h4>Total <span>$383.00</span></h4>
                                         </div>
                                         <div class="shopping-cart-button">
-                                            <a href="/cart">View cart</a>
+                                            <a href="/home/cart">View cart</a>
                                             <a href="shop-checkout.html">Checkout</a>
                                         </div>
                                     </div>
@@ -555,7 +555,7 @@
                                 </ul> -->
                             </li>
                             <li class="menu-item-has-children"><span class="menu-expand"></span><a
-                                    href="shop-grid-right.html">Categories</a>
+                                    href="/home/shop">Shop</a>
                                 <!-- <ul class="dropdown">
                                     <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
                                     <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
@@ -571,7 +571,7 @@
                                     </li>
                                     <li><a href="shop-filter.html">Shop – Filter</a></li>
                                     <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
-                                    <li><a href="/cart">Shop – Cart</a></li>
+                                    <li><a href="/home/cart">Shop – Cart</a></li>
                                     <li><a href="shop-checkout.html">Shop – Checkout</a></li>
                                     <li><a href="shop-compare.html">Shop – Compare</a></li>
                                 </ul> -->
@@ -833,11 +833,11 @@
                                         </div>
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
-                                            <div class="detail-qty border radius">
+                                            <!-- <div class="detail-qty border radius">
                                                 <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
+                                            </div> -->
                                             <div class="product-extra-link2">
                                                 <% if(product.stock==0){ %>
                                                     <!-- <button  class="button button-add-to-cart btn-danger">Out of stock</button> -->
@@ -845,8 +845,7 @@
                                                     <% }else if(product.isPublished==false){ %>
                                                         <button style="color: red;" class="btn">Unavailable</button>
                                                         <% }else{ %>
-                                                            <button type="submit"
-                                                                onclick="addToCart('<%= product._id %>')"
+                                                            <button onclick="addToCart('<%= product._id %>')"
                                                                 class="button button-add-to-cart">Add
                                                                 to
                                                                 cart</button>
@@ -861,10 +860,12 @@
                                         <!-- <ul class="product-meta font-xs color-grey mt-50">
                                             <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
                                             <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#"
-                                                    rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
-                                            <li>Availability:<span class="in-stock text-success ml-5">8 Items In
-                                                    Stock</span></li>
-                                        </ul> -->
+                                                    rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li> -->
+                                        <li>Availability:<span class="in-stock text-success ml-5">
+                                                <%= product.stock %> Items In
+                                                    Stock
+                                            </span></li>
+                                        <!-- </ul>  -->
                                     </div>
                                     <!-- Detail Info -->
                                 </div>
@@ -1522,38 +1523,58 @@
         </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function addToCart(productId) {
-            event.preventDefault(); 
-            $.ajax({
-                url: '/api/cart/add',  
-                type: 'POST',
-                data: {
-                    productId: productId,
-                    quantity: 1  // Default quantity to add
-                },
-                success: function (response) {
-                    Swal.fire({      // if it added to cart show success message
-                        icon: 'success',
-                        title: 'Added to Cart',
-                        text: 'Product has been added to your cart!',
-                        timer: 2000,  // Auto-close after 2 seconds
-                        showConfirmButton: false
-                    });
-                },
-                error: function (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'There was an error adding the product to the cart.'
-                    });
+        async function addToCart(productId) {
+            event.preventDefault();
+
+            try {
+                const response = await fetch('/home/addToCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        productId: productId,
+                        quantity: 1
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    // Check if the error is related to maximum quantity
+                    if (result.message === "Maximum quantity of 5 reached for this product") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Maximum Quantity Reached',
+                            text: 'You can only add a maximum of 5 units of this product.',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        throw new Error(result.message || 'Failed to add product to cart');
+                    }
+                    return;
                 }
-            });
+
+                // If product added successfully, show success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart',
+                    text: result.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'There was an error adding the product to the cart.'
+                });
+            }
         }
     </script>
-
 
     <%- include('footer.ejs') %>

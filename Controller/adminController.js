@@ -2,6 +2,7 @@ const User = require("../Models/userModel");
 const Category = require("../Models/category");
 const Brand = require("../Models/brand");
 const Product = require("../Models/product");
+const Order = require("../Models/orders");
 const multer = require("multer");
 
 // -------------------------------------------  multer  ------------------------------------------------------
@@ -399,6 +400,78 @@ const verifyEditProduct = async (req, res) => {
   }
 };
 
+const loadOrder = async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.render("order", { orders });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const loadAdminOrderDetails = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const orders = await Order.findById(orderId).populate("items.product");
+    res.render("adminOrderDetails", { orders });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const updateStatus = async (req, res) => {
+  try {
+    const { orderId, selectedStatus } = req.body;
+
+    const order = await Order.findById(orderId).populate("items.product");
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        $set: { status: selectedStatus },
+      },
+      { new: true }
+    );
+
+    if (updatedOrder) {
+      res.redirect("/adminOrderDetails");
+    } else {
+      res.status(404).json({ success: false, message: "Order not found" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const adminOrderCancel = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: item.quantity },
+      });
+    }
+
+    order.status = "Cancelled";
+    await order.save();
+
+    return res.redirect('/order')
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   loadAdminLogin,
   verifyAdminLogin,
@@ -429,4 +502,8 @@ module.exports = {
   unPublishProduct,
   loadEditProduct,
   verifyEditProduct,
+  loadOrder,
+  loadAdminOrderDetails,
+  updateStatus,
+  adminOrderCancel,
 };

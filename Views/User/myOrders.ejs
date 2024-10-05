@@ -34,7 +34,7 @@
                                     <li><a href="#"><img src="http://localhost:4444/user/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
                                 </ul>
                             </li>
-                            <li><i class="fi-rs-http://localhost:4444/user"></i><a href="page-login-register.html">Log In / Sign Up</a></li>
+                            <li><i class="fi-rs-user"></i><a href="page-login-register.html">Log In / Sign Up</a></li>
                         </ul>
                     </div>
                 </div>
@@ -613,8 +613,7 @@
                                 </li>
                             </ul> -->
                             </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
-                                    href="/profile">Account</a>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/profile">Account</a>
                                 <!-- <ul class="dropdown"> -->
                                 <!-- <li><a href="/logout">Logout</a></li> -->
                                 <!-- <li><a href="page-contact.html">Contact</a></li>
@@ -662,333 +661,159 @@
             </div>
         </div>
     </div>
-
     <main class="main">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
-                    <span></span> Cart
-                    <!-- <span></span>  -->
+                    <a href="/home" rel="nofollow">Home</a>
+                    <span></span> Account
                 </div>
             </div>
         </div>
-        <section class="mt-50 mb-50">
+        <section class="pt-150 pb-150">
             <div class="container">
-                <% if(cartItems.length===0){ %>
-                    <p>Your cart is empty</p>
-                    <a class="btn " href="/home"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
-                    <% }else{ %>
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
                         <div class="row">
-                            <div class="col-12">
-                                <div class="table-responsive">
-                                    <table class="table shopping-summery text-center clean">
-                                        <thead>
-                                            <tr class="main-heading">
-                                                <th scope="col">Image</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Price</th>
-                                                <th scope="col">Quantity</th>
-                                                <th scope="col">Subtotal</th>
-                                                <th scope="col">Remove</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% cartItems.forEach(item=> { %>
-                                                <tr data-product-id="<%= item.product._id %>">
-                                                    <td class="image product-thumbnail">
-                                                        <img src="/uploads/<%= item.product.images[0] %>" alt="#">
-                                                    </td>
-                                                    <td class="product-des product-name">
-                                                        <h5 class="product-name">
-                                                            <a href="#">
-                                                                <%= item.product.title %>
-                                                            </a>
-                                                        </h5>
-                                                    </td>
-                                                    <td class="price" data-title="Price"><span>
-                                                            <%= item.price %>
-                                                        </span></td>
-                                                    <td class="text-center" data-title="Stock">
-                                                        <div class="detail-qty border radius m-auto">
-                                                            <a href="#"
-                                                                onclick="qtydown('<%= item.product._id %>', '<%= item.quantity %>')"
-                                                                class="qty-down qty-btn">
-                                                                <i class="fi-rs-angle-small-down"></i>
-                                                            </a>
-                                                            <span class="qty-val">
-                                                                <%= item.quantity %>
-                                                            </span>
-                                                            <a href="#"
-                                                                onclick="qtyup('<%= item.product._id %>', '<%= item.quantity %>')"
-                                                                class="qty-up qty-button">
-                                                                <i class="fi-rs-angle-small-up"></i>
-                                                            </a>
-                                                        </div>
-                                                    </td>
-
-
-                                                    <td class="text-right" data-title="Cart">
-                                                        <span>
-                                                            <%= item.price * item.quantity %>
-                                                        </span>
-                                                    </td>
-                                                    <td class="action" data-title="Remove"><a href="#"
-                                                            onclick="removeFromCart('<%= item.product._id %>')"
-                                                            class="text-muted"><i class="fi-rs-trash"></i></a></td>
-                                                </tr>
-                                                <% }) %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="cart-action text-end">
-                                    <a class="btn  mr-10 mb-sm-15" href="/home/cart"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a>
-                                    <a class="btn" href="/home"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
-                                </div>
-                                <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
-                                <div class="row mb-50">
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="heading_s1 mb-3">
-                                            <h4>Calculate Shipping</h4>
-                                        </div>
-                                        <p class="mt-15 mb-30">Flat rate: <span
-                                                class="font-xl text-brand fw-900">5%</span></p>
-                                        <form class="field_form shipping_calculator">
-                                            <div class="form-row">
-                                                <div class="form-group col-lg-12">
-                                                    <div class="custom_select">
-                                                        <select class="form-control select-active">
-                                                            <option value="">Choose a option...</option>
-                                                            <option value="AX">Aland Islands</option>
-                                                            <option value="AF">Afghanistan</option>
-                                                            <option value="AL">Albania</option>
-                                                            <option value="DZ">Algeria</option>
-                                                            <option value="AD">Andorra</option>
-                                                            <option value="AO">Angola</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-row row">
-                                                <div class="form-group col-lg-6">
-                                                    <input required="required" placeholder="State / Country" name="name"
-                                                        type="text">
-                                                </div>
-                                                <div class="form-group col-lg-6">
-                                                    <input required="required" placeholder="PostCode / ZIP" name="name"
-                                                        type="text">
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-lg-12">
-                                                    <button class="btn  btn-sm"><i
-                                                            class="fi-rs-shuffle mr-10"></i>Update</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <div class="mb-30 mt-50">
-                                            <div class="heading_s1 mb-3">
-                                                <h4>Apply Coupon</h4>
-                                            </div>
-                                            <div class="total-amount">
-                                                <div class="left">
-                                                    <div class="coupon">
-                                                        <form action="#" target="_blank">
-                                                            <div class="form-row row justify-content-center">
-                                                                <div class="form-group col-lg-6">
-                                                                    <input class="font-medium" name="Coupon"
-                                                                        placeholder="Enter Your Coupon">
-                                                                </div>
-                                                                <div class="form-group col-lg-6">
-                                                                    <button class="btn  btn-sm"><i
-                                                                            class="fi-rs-label mr-10"></i>Apply</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="border p-md-4 p-30 border-radius cart-totals">
-                                            <div class="heading_s1 mb-3">
-                                                <h4>Cart Totals</h4>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="cart_total_label">Cart Subtotal</td>
-                                                            <td class="cart_total_amount"><span
-                                                                    class="font-lg fw-900 text-brand" id="total-price">
-                                                                    ₹<%=cart.totalPrice %>
-                                                                </span>
-
-
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="cart_total_label">Shipping</td>
-                                                            <td class="cart_total_amount"> <i class="ti-gift mr-5"></i>
-                                                                Free Shipping</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="cart_total_label">Total</td>
-                                                            <td class="cart_total_amount"><strong><span
-                                                                        class="font-xl fw-900 text-brand">
-                                                                        ₹<%= cart.totalPrice %>
-                                                                    </span></strong>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <a href="/home/cart/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
-                                                CheckOut</a>
-                                        </div>
-                                    </div>
+                            <div class="col-md-3">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/profile"><i
+                                                    class="fi-rs-user mr-10"></i>Profile</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="/home/account/myOrders"><i
+                                                    class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/address"><i class="fi-rs-marker mr-10"></i>My
+                                                Address</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/logout"><i
+                                                    class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
+                            <div class="col-md-9">
+                                <div class="tab-content dashboard-content" style="width: 650px;">
+                                    <div class="tab-pane fade active show" id="orders" role="tabpanel"
+                                        aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Your Orders</h5>
+                                            </div>
+                                            <% if(orders.length===0){ %>
+                                                <p>You have no orders , Please order something.....</p>
+                                                <% }else{ %>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#ID</th>
+                                                                <th scope="col">Name</th>
+                                                                <th scope="col">Email</th>
+                                                                <th scope="col">Total</th>
+                                                                <th scope="col">Status</th>
+                                                                <th scope="col">Date</th>
+                                                                <th scope="col" class="text-end"> Action </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% orders.forEach(order=> { %>
+
+
+                                                                <tr>
+                                                                    <td>0901</td>
+                                                                    <td><b>
+                                                                            <%= order.billingDetails.name %>
+                                                                        </b></td>
+                                                                    <td>
+                                                                        <%= order.billingDetails.email %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= order.totalPrice %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <% if (order.status=="Cancelled" ) { %>
+                                                                            <span
+                                                                                class="badge rounded-pill alert-danger">
+                                                                                <%= order.status %>
+                                                                            </span>
+                                                                            <% }else if(order.status=="Shipped" ||
+                                                                                order.status=="Delivered" ) { %>
+                                                                                <span
+                                                                                    class="badge rounded-pill alert-success">
+                                                                                    <%= order.status %>
+                                                                                </span>
+                                                                                <% }else if(order.status=="Shipped" ||
+                                                                                    order.status=="Returned" ) { %>
+                                                                                    <span
+                                                                                        class="badge rounded-pill alert-primary">
+                                                                                        <%= order.status %>
+                                                                                    </span>
+                                                                                    <% }else
+                                                                                        if(order.paymentStatus=="Failed"
+                                                                                        ) { %>
+                                                                                        <span
+                                                                                            class="badge rounded-pill alert-danger">Payment
+                                                                                            Failed</span>
+                                                                                        <% }else{ %>
+                                                                                            <span
+                                                                                                class="badge rounded-pill alert-warning">
+                                                                                                <%= order.status %>
+                                                                                            </span>
+                                                                                            <% } %>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= order.orderDate.toLocaleDateString('en-IN')
+                                                                            %>
+                                                                    </td>
+                                                                    <td class="text-end">
+                                                                        <a href="/home/account/myOrders/orderDetails/<%= order._id %>"
+                                                                            class="btn btn-sm rounded font-sm">Details</a>
+                                                                        <% if (order.paymentStatus=="Failed" ) { %>
+                                                                            <a href="/checkout?orderId=<%=order._id %>"
+                                                                                class="btn btn-sm rounded font-sm">Retry</a>
+                                                                            <% }else{ %>
+
+                                                                                <% if (order.status=="Pending" ||
+                                                                                    order.status=='Shipped' ) { %>
+                                                                                    <a href="#"
+                                                                                        class="btn btn-sm font-sm"
+                                                                                        onclick="cancelVerify('<%=order._id %>')">Cancel</a>
+                                                                                    <% }else
+                                                                                        if(order.status=="Delivered" ) {
+                                                                                        %>
+                                                                                        <a href="#"
+                                                                                            onclick="returnOrderWithReason('<%= order._id %>')"
+                                                                                            class="btn btn-sm font-sm">Return</a>
+                                                                                        <% } %>
+                                                                                            <% } %>
+                                                                    </td>
+                                                                </tr>
+                                                                <% }) %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </div>
-                        <% } %>
+                    </div>
+                </div>
+            </div>
             </div>
         </section>
     </main>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-
-        ///  update cart quantity
-        async function qtyup(productId, currentQty) {
-            event.preventDefault();
-
-            try {
-                const response = await fetch(`/home/cart/update-quantity`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        productId: productId,
-                        quantityChange: 1
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    location.reload();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: result.message
-                    });
-                }
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Network error while updating the quantity.'
-                });
-            }
-        }
-
-        async function qtydown(productId, currentQty) {
-            event.preventDefault();
-
-            try {
-                const response = await fetch(`/home/cart/update-quantity`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        productId: productId,
-                        quantityChange: -1
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    location.reload();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: result.message
-                    });
-                }
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Network error while updating the quantity.'
-                });
-            }
-        }
-
-
-        /// remove cart item
-        async function removeFromCart(productId) {
-            event.preventDefault();
-
-            try {
-                const response = await fetch(`/home/cart/removeItem/${productId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Error removing product from the cart');
-                }
-
-                // Display success message using SweetAlert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Removed',
-                    text: result.message,
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-
-                // Remove the product row from the table
-                const productRow = document.querySelector(`#product-row-${productId}`);
-                if (productRow) {
-                    productRow.remove();
-                }
-
-                // Optionally, update the total price dynamically
-                updateTotalPrice();
-
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.message || 'There was an error removing the product from the cart.'
-                });
-            }
-        }
-
-        function updateTotalPrice() {
-            // This function should update the total price after removing a product
-            let totalPrice = 0;
-            document.querySelectorAll('.price-row').forEach(row => {
-                const price = parseFloat(row.dataset.price);
-                const quantity = parseInt(row.dataset.quantity);
-                totalPrice += price * quantity;
-            });
-
-            document.getElementById('total-price').innerText = totalPrice.toFixed(2);
-        }
-    </script>
-
 
     <%- include('footer.ejs') %>

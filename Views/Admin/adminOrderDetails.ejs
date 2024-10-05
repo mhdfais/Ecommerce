@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <title>Order Details</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <!-- Template CSS -->
+    <link href="http://localhost:4444/assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" style="background-color: #0D0C11;" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="#" class="brand-wrap">
+                <img src="http://localhost:4444/logo-22.svg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/dashboard"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/customer"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/brand"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/category"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/product"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a class="menu-link text-white" href="/order"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="#"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Transactions</span>
+                    </a>
+                </li>
+
+            </ul>
+            <hr>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header style="background-color: #0D0C11;" class="main-header navbar">
+            <div class="col-search">
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <a class="dropdown-item text-danger" href="/admin-logout"><i
+                        class="material-icons md-exit_to_app"></i>Logout</a>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order detail</h2>
+                    <p>Details for Order ID: 3453012</p>
+                </div>
+            </div>
+            <div class="card">
+                <header class="card-header" style="color: white;">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                            <span>
+                                <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2022, 4:34PM</b>
+                            </span> <br>
+                            <small class="text-muted">Order ID: 3453012</small>
+                        </div>
+                        <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                            <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" id="statusSelect">
+                                <option value="Pending" <%=orders.status==='Pending' ? 'selected' : '' %>>Pending
+                                </option>
+                                <option value="Shipped" <%=orders.status==='Shipped' ? 'selected' : '' %>>Shipped
+                                </option>
+                                <option value="Delivered" <%=orders.status==='Delivered' ? 'selected' : '' %>>Delivered
+                                </option>
+                                <option value="Cancelled" <%=orders.status==='Cancelled' ? 'selected' : '' %>>Cancelled
+                                </option>
+                                <option value="Returned" <%=orders.status==='Returned' ? 'selected' : '' %>>Returned
+                                </option>
+                            </select>
+                            <a class="btn btn-primary" href="#">Save</a>
+                        </div>
+                    </div>
+                </header> <!-- card-header end// -->
+                <div class="card-body" style="color: white;">
+
+                    <div class="row mb-50 mt-20 order-info-wrap">
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-person"></i>
+                                </span>
+                                <div class="text" >
+                                    <h6 style="color: white;" class="mb-1">Customer</h6>
+                                    <p class="mb-1">
+                                        <%=orders.billingDetails.name %> <br>
+                                            <%=orders.billingDetails.email %> <br>
+                                                <%=orders.billingDetails.phone %>
+                                    </p>
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-local_shipping"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 style="color: white;" class="mb-1">Order info</h6>
+                                    <p class="mb-1">
+                                        Shipping: Fargo express <br> Pay method: <%=orders.paymentMethod %> <br> Payment
+                                            Status: <%=orders.paymentStatus %>
+                                    </p>
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-place"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 style="color: white;" class="mb-1">Deliver to</h6>
+                                    <p class="mb-1">
+                                        City: <%=orders.billingDetails.city %>, <%=orders.billingDetails.state %> <br>
+                                                <%=orders.billingDetails.address %>,<%=orders.billingDetails.street %>
+                                                        <br>
+                                                        Po Box <%=orders.billingDetails.zip %>
+                                    </p>
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                    </div> <!-- row // -->
+
+                    <div class="row">
+                        <div class="col-lg-11">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead style="color: white;">
+                                        <tr>
+                                            <th width="40%">Product</th>
+                                            <th width="20%">Unit Price</th>
+                                            <th width="20%">Quantity</th>
+                                            <th width="20%" class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="color: white;">
+
+                                        <% orders.items.forEach(item=> { %>
+                                            <tr>
+                                                <td>
+                                                    <a class="itemside" href="#">
+                                                        <div class="left">
+                                                            <img src="/uploads/<%= item.product.images[0] %>"
+                                                                width="40" height="40" class="img-xs" alt="Item">
+                                                        </div>
+                                                        <div class="info" style="color: white;">
+                                                            <%= item.product.title %>
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <%= item.price %>
+                                                </td>
+                                                <td>
+                                                    <%= item.quantity %>
+                                                </td>
+                                                <td class="text-end">
+                                                    <%= item.price * item.quantity %>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <article class="float-end">
+                                                            <dl class="dlist">
+                                                                <dt>Subtotal:</dt>
+                                                                <dd>
+                                                                    <%=orders.totalPrice %>
+                                                                </dd>
+                                                            </dl>
+                                                            <dl class="dlist">
+                                                                <dt>Shipping cost:</dt>
+                                                                <dd>Free Shipping</dd>
+                                                            </dl>
+                                                            <dl class="dlist">
+                                                                <dt>Grand total:</dt>
+                                                                <dd> <b class="h5"></b>
+                                                                    <%=orders.totalPrice %></b>
+                                                                </dd>
+                                                            </dl>
+                                                            <dl class="dlist">
+                                                                <dt class="text-muted">Status:</dt>
+                                                                <dd>
+                                                                    <span class="badge rounded-pill alert-<%= 
+                                                            orders.status === 'Pending' ? 'warning' : 
+                                                            orders.status === 'Shipped' || orders.status === 'Delivered' ? 'success' : 
+                                                            orders.status === 'Cancelled' ? 'danger' : 'primary' 
+                                                        %> text-<%= 
+                                                            orders.status === 'Pending' ? 'warning' : 
+                                                            orders.status === 'Shipped' || orders.status === 'Delivered' ? 'success' : 
+                                                            orders.status === 'Cancelled' ? 'danger' : 'primary' 
+                                                        %>">
+                                                                        <%= orders.status %>
+                                                                    </span>
+
+                                                                </dd>
+                                                            </dl>
+                                                            <% if (orders.status==='Returned' ) { %>
+                                                                <dl class="dlist">
+                                                                    <dt class="text-muted">
+                                                                        Reason: <span>
+                                                                            <%= orders.returnReason%>
+                                                                        </span>
+                                                                    </dt>
+                                                                </dl>
+                                                                <% } %>
+                                                        </article>
+                                                    </td>
+                                                </tr>
+
+                                    </tbody>
+                                </table>
+                            </div> <!-- table-responsive// -->
+                            <!-- <a class="btn btn-primary" href="page-orders-tracking.html">View Order Tracking</a> -->
+                        </div> <!-- col// -->
+                        <div class="col-lg-1"></div>
+                    </div>
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+        </section> <!-- content-main end// -->
+
+
+        <script>
+            document.getElementById('statusSelect').addEventListener('change', function() {
+                
+                const selectedStatus = this.value;
+               
+                const orderId = '<%= orders._id %>';
+    
+                fetch('/updateStatus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ orderId, selectedStatus })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update status');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    
+                    console.log('Status updated successfully:', data);
+                   
+                })
+                .catch(error => {
+                    
+                    console.error('Error updating status:', error);
+                });
+            });
+        </script>
+
+
+        <%- include('footer.ejs') %>
