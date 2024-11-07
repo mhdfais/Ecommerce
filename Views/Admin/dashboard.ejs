@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-</head>
 <!DOCTYPE HTML>
 <html lang="en">
-
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:32:35 GMT -->
 
 <head>
     <meta charset="utf-8">
@@ -31,9 +19,9 @@
 
 <body>
     <div class="screen-overlay"></div>
-    <aside class="navbar-aside" style="background-color: #0D0C11;" id="offcanvas_aside">
+    <aside style="background-color: #0D0C11;" class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
+            <a href="" class="brand-wrap">
                 <img src="logo-22.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
@@ -44,7 +32,7 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item active">
-                    <a class="menu-link active text-white" href="/dashboard"> <i class="icon material-icons md-home"></i>
+                    <a class="menu-link text-white" href="/dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
@@ -53,7 +41,7 @@
                         <span class="text">Users</span>
                     </a>
                 </li>
-                <li class="menu-item text-white">
+                <li class="menu-item">
                     <a class="menu-link text-white" href="/brand"> <i class="icon material-icons md-stars"></i>
                         <span class="text">Brands</span> </a>
                 </li>
@@ -72,11 +60,35 @@
                         <span class="text">Orders</span>
                     </a>
                 </li>
-                
+
                 <li class="menu-item">
-                    <a class="menu-link text-white" href="#"> <i class="icon material-icons md-monetization_on"></i>
-                        <span class="text">Transactions</span>
+                    <a class="menu-link text-white" href="/coupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupon</span>
                     </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/offer"> <i
+                            class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offer</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/salesReport"> <i
+                            class="icon material-icons md-insert_chart_outlined"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link text-white" href="/bestSelling"> <i
+                            class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Best Selling</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/bestCategory">Category</a>
+                        <a href="/bestProduct">Product</a>
+                        <a href="/bestBrand">Brand</a>
+                    </div>
                 </li>
             </ul>
             <hr>
@@ -86,15 +98,232 @@
     </aside>
 
     <main class="main-wrap">
-        <header class="main-header navbar" style="background-color: #0D0C11;">
+        <header style="background-color: #0D0C11;" class="main-header navbar">
             <div class="col-search">
             </div>
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
                         class="material-icons md-apps"></i> </button>
-                <a class="dropdown-item text-danger" href="/admin-logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                <a class="dropdown-item text-danger" href="/admin-logout"><i
+                        class="material-icons md-exit_to_app"></i>Logout</a>
             </div>
         </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Dashboard </h2>
+                </div>
+                <!-- <div>
+                    <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create
+                        report</a>
+                </div> -->
+            </div>
+            <!-- <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Sale Statistics</h5>
+                            <div class="mb-3">
+                                <button class="btn btn-sm btn-outline-primary mx-2" id="monthGraphBtn">Monthly</button>
+                                <button class="btn btn-sm btn-outline-primary" id="dailyGraphBtn">Daily</button>
+                            </div>
+                            <div style="height: 300px;"> 
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Order Statistics</h5>
+                            <div style="height: 300px;"> 
+                                <canvas id="orderChart"></canvas>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-primary-light"><i
+                                    class="text-primary material-icons md-monetization_on"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Revenue</h6>
+                                <span>₹ <%= revenue %></span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-success-light"><i
+                                    class="text-success material-icons md-local_shipping"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Orders</h6> <span><%= totalOrders %></span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-warning-light"><i
+                                    class="text-warning material-icons md-shopping_basket"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Products</h6> <span><%= productsCount %></span>
+                                
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-body mb-4">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle bg-info-light"><i
+                                    class="text-info material-icons md-qr_code"></i></span>
+                            <div class="text">
+                                <h6 class="mb-1 card-title">Discount</h6> <span>₹ <%= totalDiscount %></span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Sale Statistics</h5>
+                            <div>
+                                <a href="#" class="mx-2" id="monthGraphBtn">Month Graph</a>
+                                <a href="#" id="yearGraphBtn">Year Graph</a>
+                                <!-- <a href="#" class="mx-2" id="dailyGraphBtn">Weekly Graph</a> -->
+                            </div>
+                            <canvas id="lineChart" height="120px"></canvas>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="container">
+                        <div class="card mb-4">
+                            <article class="card-body">
+                                <h5 class="card-title">Order Statistics</h5>
+                                <canvas id="orderChart" height="120px"></canvas>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </section> <!-- content-main end// -->
     </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initial order statistics data
+            const ordersPie = <%- JSON.stringify(ordersPie) %>;
+            const ordersGraph = <%- JSON.stringify(ordersGraph) %>;
+            const ordersYearGraph = <%- JSON.stringify(ordersYearGraph) %>;
+
+            const orderCtx = document.getElementById("orderChart").getContext("2d");
+            const orderChart = new Chart(orderCtx, {
+                type: "doughnut",
+                data: {
+                    labels: ["Pending", "Shipped", "Delivered", "Cancelled"],
+                    datasets: [{
+                        data: [ordersPie.pending, ordersPie.shipped, ordersPie.delivered, ordersPie.cancelled],
+                        backgroundColor: ["rgba(255, 99, 132, 0.7)", "rgba(255, 205, 86, 0.7)", "rgba(54, 162, 235, 0.7)", "rgba(75, 192, 192, 0.7)"],
+                    }],
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: { color: "white" },
+                        },
+                    },
+                },
+            });
+
+            const lineCtx = document.getElementById("lineChart").getContext("2d");
+
+            function renderChart(data, label, text) {
+                // console.log(data,label,text)
+                const existingChart = Chart.getChart("lineChart");
+                if (existingChart) existingChart.destroy();
+
+                new Chart(lineCtx, {
+                    type: "line",
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: label,
+                            data: data.count,
+                            borderColor: "#00BFFF",
+                            backgroundColor: "rgba(0, 191, 255, 0.2)",
+                            //   pointBackgroundColor: '#ffffff',
+                            fill: true,
+                        }],
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                labels: { color: "orange" },
+                            },
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: Math.max(...data.count) + 100, 
+                                ticks: {
+                                    stepSize: 10, 
+                                },
+                                grid: {
+                                    borderColor: '#919090',
+                                    borderWidth: 4,
+                                    color: '#919090',
+                                    borderDash: [4, 4]
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    borderColor: '#919090',
+                                    borderWidth: 3,
+                                    color: '#919090',
+                                    borderDash: [4, 4]
+                                }
+                            },
+                        },
+                    },
+                });
+            }
+
+            document.getElementById("monthGraphBtn").addEventListener("click", function () {
+                renderChart(ordersGraph, "Orders by Month", "Monthly Orders");
+            });
+
+            document.getElementById("yearGraphBtn").addEventListener("click", function () {
+                renderChart(ordersYearGraph, "Orders by Year", "Yearly Orders");
+            });
+
+            
+
+            renderChart(ordersGraph, "Orders by Month", "Monthly Orders");
+        });
+    </script>
+
+
 
     <%- include('footer.ejs') %>

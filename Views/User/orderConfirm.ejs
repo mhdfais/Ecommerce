@@ -31,13 +31,13 @@
                         <h5 class="mb-0">Order Details</h5>
                     </div>  
                     <div class="card-body">
-                        <p><strong>Order ID:</strong><%=order._id %> </p>
+                        <p><strong>Order Number:</strong><%=order.orderNumber %> </p>
                         <p><strong>Payment Status:</strong> <%=order.paymentStatus %></p>
                         <p><strong>Delivery Address:</strong><%=order.billingDetails %></p>
                     </div>
                 </div>
                 <a href="/home" class="btn btn-primary">Continue Shopping</a>
-                <a href="/orders" class="btn btn-primary">Check Orders</a>
+                <a href="/home/account/myOrders/orderDetails/<%= order._id %>" class="btn btn-primary">Check Orders</a>
 
             </div>
         </div>

@@ -550,7 +550,9 @@ h1 {
 }
 
 h2 {
-    font-size: 30px
+    font-size: 30px;
+    color: white;
+    
 }
 
 h3 {
@@ -591,7 +593,7 @@ b {
 }
 
 .card-title {
-    color: #383e50 !important
+    color: #ffffff !important
 }
 
 .text-body {
@@ -3717,7 +3719,8 @@ body.offcanvas-active {
     padding: 30px 3%;
     margin-left: auto;
     margin-right: auto;
-    background-color: #f8f9fa
+    background-color: #21222C;
+    padding-bottom: 24vh;
 }
 
 .navbar-aside {

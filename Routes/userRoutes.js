@@ -5,6 +5,8 @@ const userController = require("../Controller/userController");
 
 const isUser = require("../Middlewares/userAuth");
 const checkBlocked = require("../Middlewares/isBlocked");
+const authController = require("../config/passport");
+const passport = require("passport");
 
 user_route.set("view engine", "ejs");
 user_route.set("views", "./Views/User");
@@ -22,6 +24,24 @@ user_route.use(
     resave: false,
     saveUninitialized: false,
   })
+);
+
+// user_route.get('/auth/google', authController.googleAuth);
+// user_route.get('/auth/google/callback', authController.googleAuthCallback);
+
+user_route.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  })
+);
+
+// Route to handle Google callback (after Google login)
+user_route.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  userController.googleAuth
 );
 
 // authentication
@@ -45,13 +65,12 @@ user_route.post("/reset-password", isUser, userController.resetPassword);
 // home
 user_route.get("/home", isUser, userController.loadHome);
 
-// product 
+// product
 user_route.get(
   "/product-details/:id",
   isUser,
   userController.loadProductDetails
 );
-
 
 //  Profile
 user_route.get("/profile", isUser, userController.loadProfile);
@@ -73,13 +92,17 @@ user_route.get(
   isUser,
   userController.loadOrderDetails
 );
-
+user_route.get("/orderCancel/:orderId", isUser, userController.orderCancel);
+user_route.post("/order/return", isUser, userController.returnOrder);
+user_route.post('/home/account/myOrders/retry-payment',userController.retryPayment)
+user_route.post('/home/account/myOrders/verify-retry-payment',userController.verifyRetryPayment)
+user_route.get('/home/account/myOrders/orderDetails/downloadInvoice/:id',userController.getOrderInvoice)
 
 // cart
 user_route.get("/home/cart", isUser, userController.loadCart);
 user_route.post("/home/addToCart", isUser, userController.addToCart);
-user_route.patch(
-  "/home/cart/update-quantity",
+user_route.post(
+  "/home/cart/updateQuantity/:id/:action",
   isUser,
   userController.updateCartQuantity
 );
@@ -89,8 +112,17 @@ user_route.delete(
   userController.deleteCartItem
 );
 
+// user_route.post("/home/cart/apply-coupon", isUser, userController.applyCoupon);
+// user_route.post(
+//   "/home/cart/remove-coupon",
+//   isUser,
+//   userController.removeCoupon
+// );
+
 // shop
+
 user_route.get("/home/shop", isUser, userController.loadShop);
+user_route.get("/home/shop/category/:categoryName", isUser, userController.loadShop);
 
 // checkout, placeorder
 user_route.get("/home/cart/checkout", isUser, userController.loadCheckout);
@@ -104,6 +136,37 @@ user_route.get(
   isUser,
   userController.loadOrderConfirm
 );
+
+// razorpay
+user_route.post(
+  "/home/cart/checkout/verify-payment",
+  isUser,
+  userController.verifyPaymentAndCreateOrder
+);
+user_route.post(
+  "/home/cart/checkout/razorpay-order",
+  isUser,
+  userController.createRazorpayOrder
+);
+
+//  wishlist
+user_route.get("/home/wishlist", isUser, userController.loadWishlist);
+user_route.post("/wishlist/add/:id", isUser, userController.addToWishlist);
+user_route.delete(
+  "/wishlist/remove/:id",
+  isUser,
+  userController.removeFromWishlist
+);
+
+// coupon
+user_route.get('/home/cart/checkout/getCoupon', isUser, userController.getCoupon)
+user_route.post('/home/cart/checkout/applyCoupon', isUser, userController.applyCoupon)
+user_route.post('/home/cart/checkout/cancelCoupon', isUser, userController.cancelCoupon)
+
+user_route.get("/home/shop/search", isUser, userController.loadSearch);
+
+// wallet
+user_route.get("/home/account/wallet", isUser, userController.loadWallet);
 
 // logout
 user_route.get("/logout", userController.logout);

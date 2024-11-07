@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .company-details,
+        .invoice-details {
+            flex: 1;
+        }
+
+        .invoice-details {
+            text-align: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .totals {
+            text-align: right;
+        }
+
+        .totals table {
+            width: 300px;
+            margin-left: auto;
+        }
+
+        .totals table td:first-child {
+            text-align: left;
+        }
+
+        .totals table td:last-child {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-header">
+        <div class="company-details">
+            <h1>TEAPOY</h1>
+            <p>
+                123 Company Street<br>
+                City, State 12345<br>
+                Phone: (123) 456-7890<br>
+                Email: teapoy11@.com
+            </p>
+        </div>
+        <div class="invoice-details">
+            <h2>Invoice</h2>
+            <p>
+                Invoice Number: 76b97c44-971a-4c9e-aac5-3e2f4dfe240b<br>
+                    Date: Thu Oct 31 2024 04:31:03 GMT-0800 (GMT-08:00)<br>
+            </p>
+        </div>
+    </div>
+
+    <div class="client-details">
+        <h3>Bill To:</h3>
+        <p>
+             Fais tm<br>
+            thekkadath house<br>
+            dfgsdf, Kerala, India<br>
+            Pincode: 465659<br>
+            Phone: 8590426897<br>
+            Email: mhdfaistm@gmail.com<br>
+        </p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+                <tr>
+                    <td>
+                        Helios Naomi Velvet Wing Chair
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        11199.00
+                    </td>
+                    <td>
+                        11199.00
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Helios Rhine Wardrobe
+                    </td>
+                    <td>
+                        2
+                    </td>
+                    <td>
+                        10800.00
+                    </td>
+                    <td>
+                        21600.00
+                    </td>
+                </tr>
+
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <table>
+            <tr>
+                <td>Subtotal:</td>
+                <td>
+                    32799.00
+                </td>
+            </tr>
+            <tr>
+                <td>Discount:</td>
+                <td>
+                    0.00
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Total:</strong></td>
+                <td><strong>
+                        32799.00
+                    </strong></td>
+            </tr>
+    </div>
+
+    <div class="notes">
+        <h3>Thank you for your business!</h3>
+
+    </div>
+</body>
+
+</html>

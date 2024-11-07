@@ -3,7 +3,12 @@ const Category = require("../Models/category");
 const Brand = require("../Models/brand");
 const Product = require("../Models/product");
 const Order = require("../Models/orders");
+const Coupon = require("../Models/coupon");
+const Wallet = require("../Models/wallet");
+const Transaction = require("../Models/transaction");
+const Offer = require("../Models/offer");
 const multer = require("multer");
+const dayjs = require("dayjs");
 
 // -------------------------------------------  multer  ------------------------------------------------------
 
@@ -85,20 +90,51 @@ const unBlockUser = async (req, res) => {
 
 const loadCustomer = async (req, res) => {
   try {
-    const user = await User.find({ isVerified: true });
-    res.render("customer", { user });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const skip = (page - 1) * limit;
+
+    const totalCustomers = await User.countDocuments({ isVerified: true });
+
+    const totalPages = Math.ceil(totalCustomers / limit);
+
+    const customers = await User.find({ isVerified: true })
+      .skip(skip)
+      .limit(limit);
+
+    res.render("customer", {
+      user: customers,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Server Error");
   }
 };
 
-// -------------------------------------------------  DASHBOARD  --------------------------------------------
-
-const loadDashboard = async (req, res) => {
+const getPaginatedUsers = async (req, res) => {
   try {
-    res.render("dashboard");
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+
+    const skip = (page - 1) * limit;
+
+    const totalUsers = await User.countDocuments({ isVerified: true });
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    const users = await User.find({ isVerified: true }).skip(skip).limit(limit);
+
+    res.render("customer", {
+      user: users,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).send("Server Error");
   }
 };
 
@@ -271,11 +307,25 @@ const unListBrand = async (req, res) => {
 // ---------------------------------------------------  PRODUCT  ---------------------------------------------
 
 const loadProduct = async (req, res) => {
+  const limit = 5;
+  const page = parseInt(req.query.page) || 1;
+
   try {
-    const data = await Product.find();
-    res.render("product", { data });
+    const totalItems = await Product.countDocuments();
+    const totalPages = Math.ceil(totalItems / limit);
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find().skip(skip).limit(limit);
+
+    res.render("product", {
+      products,
+      currentPage: page,
+      totalPages,
+      limit,
+    });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Error loading products" });
   }
 };
 
@@ -292,13 +342,10 @@ const loadAddProduct = async (req, res) => {
 };
 
 const insertProduct = async (req, res) => {
-  const { product_price, product_stock } = req.body;
-  const price = parseFloat(product_price);
-  const stock = parseInt(product_stock);
-  // if (!isNaN(price) || price <= 0 || isNaN(stock) || stock < 0) {
-  //   req.flash("err", "price must be positive and stock be 0 or more");
-  //   return res.redirect("/add-product");
-  // }
+  // const { product_price, product_stock } = req.body;
+  // const price = parseFloat(product_price);
+  // const stock = parseInt(product_stock);
+
   try {
     if (req.files.length < 3) {
       req.flash("threeImage", "At least images be added");
@@ -400,12 +447,76 @@ const verifyEditProduct = async (req, res) => {
   }
 };
 
+const getPaginatedProducts = async (req, res) => {
+  const limit = 5;
+  const page = parseInt(req.query.page) || 1;
+
+  try {
+    const totalItems = await Product.countDocuments();
+    const totalPages = Math.ceil(totalItems / limit);
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find().skip(skip).limit(limit);
+
+    res.render("product", {
+      products,
+      currentPage: page,
+      totalPages,
+      limit,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products" });
+  }
+};
+
 const loadOrder = async (req, res) => {
   try {
-    const orders = await Order.find();
-    res.render("order", { orders });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+
+    const skip = (page - 1) * limit;
+
+    const totalOrders = await Order.countDocuments();
+
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    const orders = await Order.find()
+     .sort({ orderDate: -1 })
+      .skip(skip)
+      .limit(limit)
+
+    res.render("order", {
+      orders,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+const getPaginatedOrders = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+
+    const skip = (page - 1) * limit;
+
+    const totalOrders = await Order.countDocuments();
+
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    const orders = await Order.find().skip(skip).limit(limit);
+
+    res.render("order", {
+      orders,
+      currentPage: page,
+      totalPages,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
   }
 };
 
@@ -457,6 +568,12 @@ const adminOrderCancel = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    const refundAmount = order.totalPrice;
+
+    if (!refundAmount || isNaN(refundAmount) || refundAmount <= 0) {
+      return res.status(400).json({ message: "Invalid refund amount" });
+    }
+
     for (const item of order.items) {
       await Product.findByIdAndUpdate(item.product, {
         $inc: { stock: item.quantity },
@@ -466,16 +583,414 @@ const adminOrderCancel = async (req, res) => {
     order.status = "Cancelled";
     await order.save();
 
-    return res.redirect('/order')
+    let wallet = await Wallet.findOne({ userId: order.userId });
+
+    if (!wallet) {
+      wallet = new Wallet({
+        userId: order.userId,
+        balance: 0,
+      });
+      await wallet.save();
+    }
+
+    wallet.balance += refundAmount;
+    await wallet.save();
+
+    const transaction = new Transaction({
+      userId: order.userId,
+      amount: order.totalPrice,
+      status: "Success",
+      type: "Credited",
+    });
+    await transaction.save();
+
+    return res.redirect("/order");
   } catch (error) {
     console.log(error.message);
+    return res.status(500).json({
+      message: "An error occurred while processing the cancellation.",
+    });
+  }
+};
+
+//  ------------------------------------------------  COUPON  ------------------------------------------------
+
+const loadCoupon = async (req, res) => {
+  try {
+    const coupons = await Coupon.find();
+    res.render("coupons", { coupons });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadAddCoupon = async (req, res) => {
+  try {
+    const coupExist = req.flash("coupExist");
+    res.render("addCoupon", { coupExist });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const insertCoupon = async (req, res) => {
+  try {
+    const {
+      couponCode,
+      description,
+      discount,
+      minAmount,
+      maxAmount,
+      expiryDate,
+    } = req.body;
+    const existingCoupon = await Coupon.findOne({ couponCode });
+
+    if (existingCoupon) {
+      req.flash("coupExist", "Coupon already exists");
+      return res.redirect("/coupon/add-coupon");
+    }
+
+    const newCoupon = new Coupon({
+      couponCode,
+      description,
+      discountPercentage: discount,
+      maxDiscountAmount: maxAmount,
+      minAmount,
+      expiryDate,
+    });
+
+    await newCoupon.save();
+
+    return res.redirect("/coupon");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteCoupon = async (req, res) => {
+  try {
+    const couponId = req.params.id;
+    await Coupon.findByIdAndDelete(couponId);
+    res.json({ success: true });
+  } catch (error) {
+    res.json({ success: false });
+    console.log(error);
+  }
+};
+
+//------------------------------------------  OFFER  ------------------------------------------------------
+
+const loadOffer = async (req, res) => {
+  try {
+    const offers = await Offer.find()
+      .populate("applicableProducts", "title")
+      .populate("applicableCategories", "category");
+    res.render("offer", { offers });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadAddOffer = async (req, res) => {
+  try {
+    const products = await Product.find({ isPublished: true });
+    const categories = await Category.find({ isListed: true });
+    res.render("addOffer", { products, categories });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const insertOffer = async (req, res) => {
+  try {
+    const {
+      offerName,
+      offerType,
+      discountPercentage,
+      startDate,
+      endDate,
+      applicableProducts,
+      applicableCategories,
+    } = req.body;
+
+    const offer = new Offer({
+      offerName,
+      offerType,
+      discountPercentage,
+      startDate,
+      endDate,
+      applicableProducts,
+      applicableCategories,
+    });
+
+    const offerAdded = await offer.save();
+    const percentage = offerAdded.discountPercentage;
+    if (offerAdded.offerType === "product") {
+      for (const product of offerAdded.applicableProducts) {
+        let productOffer = await Product.findById(product);
+        if (productOffer) {
+          productOffer.isDiscounted = true;
+          productOffer.offerId = offerAdded._id;
+          productOffer.offerPercentage = percentage;
+          await productOffer.save();
+        }
+      }
+    } else {
+      for (const category of offerAdded.applicableCategories) {
+        let categoryProducts = await Product.find({ category });
+        for (const productOffer of categoryProducts) {
+          productOffer.isDiscounted = true;
+          productOffer.offerId = offerAdded._id;
+          productOffer.offerPercentage = percentage;
+          await productOffer.save();
+        }
+      }
+    }
+
+    if (offerAdded) res.redirect("/offer");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const listOffer = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Offer.findByIdAndUpdate(id, { isListed: true });
+    const products = await Product.find({ offerId: id });
+    for (let product of products) {
+      product.isDiscounted = true;
+      await product.save();
+    }
+    res.redirect("/offer");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const unListOffer = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Offer.findByIdAndUpdate(id, { isListed: false });
+    const products = await Product.find({ offerId: id });
+    // console.log(products)
+    for (let product of products) {
+      product.isDiscounted = !product.isDiscounted;
+      await product.save();
+    }
+    res.redirect("/offer");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//================================================== SALES REPORT ==================================================
+
+const loadSalesReport = async (req, res) => {
+  try {
+    const { filter, startDate, endDate, page = 1 } = req.query;
+    const limit = 8;
+    const skip = (page - 1) * limit;
+
+    let filterOptions = {};
+    let today = dayjs().startOf("day");
+
+    switch (filter) {
+      case "daily":
+        filterOptions.orderDate = {
+          $gte: today.toDate(),
+          $lte: today.endOf("day").toDate(),
+        };
+        break;
+
+      case "weekly":
+        let lastWeek = today.subtract(7, "day");
+        filterOptions.orderDate = {
+          $gte: lastWeek.toDate(),
+          $lte: today.endOf("day").toDate(),
+        };
+        break;
+
+      case "monthly":
+        let lastMonth = today.subtract(1, "month");
+        filterOptions.orderDate = {
+          $gte: lastMonth.toDate(),
+          $lte: today.endOf("day").toDate(),
+        };
+        break;
+
+      case "yearly":
+        let lastYear = today.subtract(1, "year");
+        filterOptions.orderDate = {
+          $gte: lastYear.toDate(),
+          $lte: today.endOf("day").toDate(),
+        };
+        break;
+
+      default:
+        if (startDate && endDate) {
+          filterOptions.orderDate = {
+            $gte: dayjs(startDate).startOf("day").toDate(),
+            $lte: dayjs(endDate).endOf("day").toDate(),
+          };
+        }
+    }
+
+    const totalOrders = await Order.countDocuments(filterOptions);
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    const orders = await Order.find(filterOptions)
+      .populate("userId", "email")
+      .sort({ orderDate: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.render("salesReport", {
+      orders,
+      endDate,
+      startDate,
+      filter,
+      currentPage: parseInt(page),
+      totalPages,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//=============================================  BEST SELLING CATEGORY  ===========================================
+
+const loadBestCategory = async (req, res) => {
+  try {
+    const topCategories = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      { $unwind: "$product" },
+      {
+        $group: {
+          _id: "$product.category",
+          totalQuantity: { $sum: "$items.quantity" },
+        },
+      },
+      {
+        $sort: { totalQuantity: -1 },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: "$category" },
+      {
+        $project: {
+          _id: "$category._id",
+          category: "$category.category",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+    // console.log(topCategories);
+    res.render("bestCategory", { topCategories });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadBestProduct = async (req, res) => {
+  try {
+    const topProducts = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.product",
+          totalQuantity: { $sum: "$items.quantity" },
+        },
+      },
+      { $sort: { totalQuantity: -1 } },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      { $unwind: "$product" },
+      {
+        $project: {
+          _id: "$product._id",
+          productTitle: "$product.title",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+    res.render("bestProduct", { topProducts });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadBestBrand = async (req, res) => {
+  try {
+    const topBrands = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      { $unwind: "$product" },
+      {
+        $group: {
+          _id: "$product.brand",
+          totalQuantity: { $sum: "$items.quantity" },
+        },
+      },
+      { $sort: { totalQuantity: -1 } },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "brands",
+          localField: "_id",
+          foreignField: "_id",
+          as: "brand",
+        },
+      },
+      { $unwind: "$brand" },
+      {
+        $project: {
+          _id: "$brand._id",
+          brandName: "$brand.brand",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+    res.render("bestBrand", { topBrands });
+  } catch (error) {
+    console.log(error);
   }
 };
 
 module.exports = {
   loadAdminLogin,
   verifyAdminLogin,
-  loadDashboard,
   loadCustomer,
   blockUser,
   unBlockUser,
@@ -506,4 +1021,20 @@ module.exports = {
   loadAdminOrderDetails,
   updateStatus,
   adminOrderCancel,
+  loadCoupon,
+  loadAddCoupon,
+  insertCoupon,
+  deleteCoupon,
+  getPaginatedProducts,
+  getPaginatedOrders,
+  getPaginatedUsers,
+  loadOffer,
+  loadAddOffer,
+  insertOffer,
+  listOffer,
+  unListOffer,
+  loadSalesReport,
+  loadBestCategory,
+  loadBestBrand,
+  loadBestProduct,
 };

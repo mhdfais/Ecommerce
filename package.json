@@ -2,7 +2,9 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
+    "easyinvoice": "^3.0.47",
     "ejs": "^3.1.10",
     "express": "^4.21.0",
     "express-flash-messages": "^0.1.1",
@@ -14,7 +16,12 @@
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
-    "passport-google-oauth2": "^0.2.0"
+    "passport-google-oauth2": "^0.2.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pdfkit": "^0.15.0",
+    "puppeteer": "^23.6.1",
+    "razorpay": "^2.9.4",
+    "uuid": "^11.0.2"
   },
   "scripts": {
     "start": "nodemon server.js"

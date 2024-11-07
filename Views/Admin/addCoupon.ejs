@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Teapoy</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <!-- Template CSS -->
+    <link href="http://localhost:4444/assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" style="background-color: #0D0C11;" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="#" class="brand-wrap">
+                <img src="http://localhost:4444/logo-22.svg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/dashboard"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/customer"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/brand"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/category"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/product"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/order"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                </li>
+
+                <li class="menu-item active">
+                    <a class="menu-link text-white" href="/coupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupon</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/offer"> <i
+                            class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offer</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/salesReport"> <i
+                            class="icon material-icons md-insert_chart_outlined"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link text-white" href="/bestSelling"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Best Selling</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/bestCategory">Category</a>
+                        <a href="/bestProduct">Product</a>
+                        <a href="/bestBrand" >Brand</a>
+                    </div>
+                </li>
+
+            </ul>
+            <hr>
+            <br>
+            <br>
+        </nav>
+    </aside>
+
+    <main class="main-wrap">
+        <header style="background-color: #0D0C11;" class="main-header navbar">
+            <div class="col-search">
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <a class="dropdown-item text-danger" href="/admin-logout"><i
+                        class="material-icons md-exit_to_app"></i>Logout</a>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title"> New Coupon</h2>
+                    </div>
+                    <p style="color: red;">
+                        <%= coupExist %>
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form action="/coupon/add-coupon" method="post" onsubmit="return validateForm()">
+                                <div class="mb-4">
+                                    <label style="color: white;" for="coupon_code" class="form-label">Coupon
+                                        Code</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="text"
+                                        placeholder="Enter code" class="form-control" name="couponCode"
+                                        id="coupon_code">
+                                    <span id="code-error" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label style="color: white;" for="coupon_description"
+                                        class="form-label">Description</label>
+                                    <textarea style="background-color: #0D0C11; color: white;"
+                                        placeholder="Enter description" class="form-control" rows="4" name="description"
+                                        id="coupon_description"></textarea>
+                                    <span id="description-error" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label style="color: white;" for="percentage" class="form-label">Discount
+                                        (%)</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="text"
+                                        placeholder="Enter percentage" class="form-control" name="discount"
+                                        id="percentage">
+                                    <span id="price-error" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label style="color: white;" for="min_amount" class="form-label">Min Amount</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="text"
+                                        placeholder="Enter min amount" class="form-control" name="minAmount"
+                                        id="min_amount">
+                                    <span id="min-amount-error" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label style="color: white;" for="max_amount" class="form-label">Max Amount</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="text"
+                                        placeholder="Enter max amount" class="form-control" name="maxAmount"
+                                        id="max_amount">
+                                    <span id="max-amount-error" style="color: red;"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label style="color: white;" for="expiry_date" class="form-label">Expiry
+                                        Date</label>
+                                    <input style="background-color: #0D0C11; color: white;" type="date"
+                                        class="form-control" name="expiryDate" id="expiry_date">
+                                    <span id="date-error" style="color: red;"></span>
+                                </div>
+
+                                <input class="btn btn-secondary" type="submit" value="Add">
+                            </form>
+
+                        </div> <!-- card end// -->
+                    </div>
+                </div>
+        </section> <!-- content-main end// -->
+
+        <script>
+            function validateCode() {
+                var codeError = document.getElementById("code-error");
+                var code = document.getElementById("coupon_code").value.trim();
+                var uppercaseRegex = /^[A-Z0-9]+$/;
+                if (!uppercaseRegex.test(code)) {
+                    codeError.innerHTML = "Coupon code must contain only uppercase letters and numbers";
+                    codeError.style.color = "red";
+                    return false;
+                }
+                codeError.innerHTML = "";
+                return true;
+            }
+
+            function validateDescription() {
+                var descriptionError = document.getElementById("description-error");
+                var desc = document.getElementById("coupon_description").value.trim();
+                if (desc.length === 0) {
+                    descriptionError.innerHTML = "Description is required";
+                    descriptionError.style.color = "red";
+                    return false;
+                }
+                descriptionError.innerHTML = "";
+                return true;
+            }
+
+            function validatePrice() {
+                var priceError = document.getElementById("price-error");
+                var price = document.getElementById("percentage").value.trim();
+                if (price.length === 0 || isNaN(price) || parseFloat(price) <= 0 || parseFloat(price) > 100) {
+                    priceError.innerHTML = "Discount must be between 0 and 100";
+                    priceError.style.color = "red";
+                    return false;
+                }
+                priceError.innerHTML = "";
+                return true;
+            }
+
+            function validateMinAmount() {
+                var minAmountError = document.getElementById("min-amount-error");
+                var minAmount = document.getElementById("min_amount").value.trim();
+                if (minAmount.length === 0 || minAmount < 1 || isNaN(minAmount) || parseFloat(minAmount) < 0) {
+                    minAmountError.innerHTML = "Min Amount must be a positive number";
+                    minAmountError.style.color = "red";
+                    return false;
+                }
+                minAmountError.innerHTML = "";
+                return true;
+            }
+
+            function validateMaxAmount() {
+                var maxAmountError = document.getElementById("max-amount-error");
+                var maxAmount = document.getElementById("max_amount").value.trim();
+                if (maxAmount.length === 0 || maxAmount < 1 || isNaN(maxAmount) || parseFloat(maxAmount) < 0) {
+                    maxAmountError.innerHTML = "Max Amount must be greater than or equal to Min Amount";
+                    maxAmountError.style.color = "red";
+                    return false;
+                }
+                maxAmountError.innerHTML = "";
+                return true;
+            }
+
+            function validateDate() {
+                var dateError = document.getElementById("date-error");
+                var dateInput = document.getElementById("expiry_date").value;
+                var currentDate = new Date();
+                var selectedDate = new Date(dateInput);
+                if (selectedDate <= currentDate) {
+                    dateError.innerHTML = "Please select a future date";
+                    dateError.style.color = "red";
+                    return false;
+                }
+                dateError.innerHTML = "";
+                return true;
+            }
+
+            function validateForm() {
+                return validateCode() && validateDescription() && validatePrice() && validateMinAmount() && validateMaxAmount() && validateDate();
+            }
+        </script>
+
+
+
+        <%- include('footer.ejs') %>

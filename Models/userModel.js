@@ -11,11 +11,9 @@ const userSchema = new mongoose.Schema({
   },
   phno: {
     type: String,
-    required: true,
   },
   pswd: {
     type: String,
-    required: true,
   },
   isVerified: {
     type: Boolean,

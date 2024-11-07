@@ -42,10 +42,10 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
+    default: "COD",
   },
   paymentStatus: {
     type: String,
-    default: "COD",
   },
   orderDate: {
     type: Date,
@@ -53,6 +53,14 @@ const orderSchema = new mongoose.Schema({
   },
   returnReason: {
     type: String,
+  },
+  discount: {
+    type: Number,
+    default: 0,
+  },
+  orderNumber: {
+    type: String,
+    unique: true,
   },
 });
 

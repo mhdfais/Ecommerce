@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Teapoy</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <!-- Template CSS -->
+    <link href="assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" style="background-color: #0D0C11;" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="" class="brand-wrap">
+                <img src="logo-22.svg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/dashboard"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/customer"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/brand"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/category"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/product"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/order"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/coupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupon</span>
+                    </a>
+                </li>
+
+                <li class="menu-item active">
+                    <a class="menu-link text-white" href="/offer"> <i
+                            class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offer</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/salesReport"> <i
+                            class="icon material-icons md-insert_chart_outlined"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link text-white" href="/bestSelling"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Best Selling</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/bestCategory">Category</a>
+                        <a href="/bestProduct">Product</a>
+                        <a href="/bestBrand" >Brand</a>
+                    </div>
+                </li>
+            </ul>
+            <hr>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header style="background-color: #0D0C11;" class="main-header navbar">
+            <div class="col-search">
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <a class="dropdown-item text-danger" href="/admin-logout"><i
+                        class="material-icons md-exit_to_app"></i>Logout</a>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Offers </h2>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </div>
+                <div>
+                    <a href="/offer/add-offer" class="btn btn-md rounded font-sm">Add</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr style="color: white;">
+                                    <!-- <th scope="col">#</th> -->
+                                    <th scope="col">Offer name</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">%</th>
+                                    <th scope="col">Applicable products/categories</th>
+                                    <th scope="col"> Status </th>
+                                    <th scope="col"> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white;">
+                                <% offers.forEach(offer=>{ %>
+                                    <tr>
+                                        <td>
+                                            <%= offer.offerName %>
+                                        </td>
+                                        <td>
+                                            <%= offer.offerType %>
+                                        </td>
+                                        <td>
+                                            <%= offer.discountPercentage %>
+                                        </td>
+                                        <td>
+                                            <% if (offer.offerType==='product' ) { %>
+                                                <ul>
+                                                    <% offer.applicableProducts.forEach(product=> { %>
+                                                        <li>
+                                                            <p>=>&nbsp;&nbsp;  <%= product.title %></p>
+                                                        </li>
+                                                        <% }); %>
+                                                </ul>
+                                                <% } else if (offer.offerType==='category' ) { %>
+                                                    <ul>
+                                                        <% offer.applicableCategories.forEach(category=> { %>
+                                                            <li>
+                                                               <p>=>&nbsp;&nbsp; <%= category.category %></p>
+                                                            </li>
+                                                            <% }); %>
+                                                    </ul>
+                                                    <% } %>
+                                        </td>
+                                        <td>
+                                            <% if(offer.isListed){ %>
+                                                <span class="badge rounded-pill alert-success">Listed</span>
+                                            <% }else{ %>
+                                                <span class="badge rounded-pill alert-danger">Unlisted</span>
+                                            <% } %>        
+                                        </td>
+                                        <td>
+                                            <% if(offer.isListed){ %>
+                                                <form action="/offer/unlist-offer/<%= offer._id %>" method="post">
+                                                    <button type="submit" class="btn btn-outline-warning btn-sm">Unlist</button>
+                                                </form>
+                                               <% }else{ %>
+                                                <form action="/offer/list-offer/<%= offer._id %>" method="post">
+                                                    <button type="submit" class="btn btn-outline-warning btn-sm">List</button> 
+                                                </form>
+                                                <% } %>
+                                        </td> 
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div> <!-- table-responsive //end -->
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+            <!-- <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i
+                                    class="material-icons md-chevron_right"></i></a></li>
+                    </ul>
+                </nav>
+            </div> -->
+        </section> <!-- content-main end// -->
+
+        <%- include('footer.ejs') %>

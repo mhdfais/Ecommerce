@@ -944,6 +944,7 @@ button.submit:hover, button[type='submit']:hover {
   font-size: 12px;
   text-transform: none;
   line-height: 1.8;
+  margin-top: 4px;
 }
 
 .btn.btn-rounded, .button.btn-rounded {

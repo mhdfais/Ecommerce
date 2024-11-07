@@ -1,0 +1,131 @@
+<%- include('header.ejs') %>
+
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/home" rel="nofollow">Home</a>
+                    <span></span> Account
+                </div>
+            </div>
+        </div>
+        <section class="pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/profile"><i
+                                                    class="fi-rs-user mr-10"></i>Profile</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/home/account/myOrders    "><i
+                                                    class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/address"><i class="fi-rs-marker mr-10"></i>My
+                                                Address</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="home/account/wallet"><i
+                                                    class="fa-solid fa-wallet mr-10"></i>Wallet</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/logout"><i
+                                                    class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8 col-md-8 mt-5">
+                                <div class="account-content">
+                                    <!-- Account Details Section -->
+
+                                    <section id="account-details" class="account-section">
+                                        <div style="display: flex; justify-content: space-between">
+                                            <h2><b>Wallet</b></h2>
+                                            <form id="walletForm">
+                                                <!-- <div class="d-flex align-items-center">
+                                                    <input type="text" class="form-control mr-2 me-1" id="amountInput"
+                                                        name="amountInput" placeholder="Enter amount" />
+                                                    <button id="addButton" class="btn btn-primary" type="button"
+                                                        onclick="addAmount()">
+                                                        Add
+                                                    </button>
+                                                </div> -->
+                                                <small class="text-danger ms-3" id="error"></small>
+                                            </form>
+                                        </div>
+
+                                        <div>
+                                            <div>
+                                                <p>Name: <%= wallet.userId.name %>
+                                                </p>
+                                                <p>Balance: <%= wallet.balance %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <!-- Account Details Section End -->
+
+                                    <br>
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                    <th>Type</th>
+                                                </tr>
+                                            </thead>
+                                            <% transactions.forEach(transaction=> { %>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><b>
+                                                                <%= transaction.date %>
+                                                            </b></td>
+                                                        <td>
+                                                            <%= transaction.amount %>
+                                                        </td>
+                                                        <td>
+                                                            <% if (transaction.status=="Debited" ) { %>
+                                                                <span class="badge rounded-pill alert-danger">
+                                                                    <%= transaction.status %>
+                                                                </span>
+                                                                <% }else{ %>
+                                                                    <span class="badge rounded-pill alert-success">
+                                                                        <%= transaction.status %>
+                                                                    </span>
+                                                                    <% } %>
+                                                        </td>
+                                                        <td>
+                                                            <%= transaction.type %>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <% }) %>
+
+                                        </table>
+                                    </div> <!-- table-responsive.// -->
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <%- include('footer.ejs') %>

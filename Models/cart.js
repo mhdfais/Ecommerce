@@ -21,10 +21,14 @@ const cartSchema = new mongoose.Schema({
         type: Number,
         require: true,
         min: 1,
-        max: 5
+        max: 5,
       },
     },
   ],
+  discount: {
+    type: Number,
+    default: 0,
+  },
   totalPrice: {
     type: Number,
     default: 0,

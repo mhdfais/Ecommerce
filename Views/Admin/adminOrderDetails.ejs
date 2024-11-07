@@ -65,9 +65,31 @@
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link text-white" href="#"> <i class="icon material-icons md-monetization_on"></i>
-                        <span class="text">Transactions</span>
+                    <a class="menu-link text-white" href="/coupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupon</span>
                     </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/offer"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offer</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/salesReport"> <i
+                            class="icon material-icons md-insert_chart_outlined"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link text-white" href="/bestSelling"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Best Selling</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/bestCategory">Category</a>
+                        <a href="/bestProduct">Product</a>
+                        <a href="/bestBrand" >Brand</a>
+                    </div>
                 </li>
 
             </ul>
@@ -101,8 +123,14 @@
                             <span>
                                 <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2022, 4:34PM</b>
                             </span> <br>
-                            <small class="text-muted">Order ID: 3453012</small>
+                            <small class="text-muted">Order ID: <%= orders.orderNumber %></small>
                         </div>
+                        <% if(orders.status==='Delivered'){ %>
+                            <p style="color: green;">Order Delivered Successfully</p>
+
+                        <% }else if(orders.paymentStatus==='Failed'){ %>
+                            <p style="color: red;">Payment Failed</p>
+                        <%}else{  %>
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" id="statusSelect">
                                 <option value="Pending" <%=orders.status==='Pending' ? 'selected' : '' %>>Pending
@@ -116,8 +144,9 @@
                                 <option value="Returned" <%=orders.status==='Returned' ? 'selected' : '' %>>Returned
                                 </option>
                             </select>
-                            <a class="btn btn-primary" href="#">Save</a>
+                            <a class="btn btn-primary" href="/order">Save</a>
                         </div>
+                        <% } %>
                     </div>
                 </header> <!-- card-header end// -->
                 <div class="card-body" style="color: white;">
@@ -293,7 +322,7 @@
                 .then(data => {
                     
                     console.log('Status updated successfully:', data);
-                   
+                    window.location.reload();
                 })
                 .catch(error => {
                     

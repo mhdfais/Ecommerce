@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
+
 <body>
-    
+
 
 
     <!-- <link rel="stylesheet" href=" user/reg-style.css"> -->
@@ -156,9 +158,9 @@
 
             <p style="color: red; text-align: center;">
                 <%= invalidCredential %>
-                <%= fail %>
-                <%= resetPswdMailSent %>
-                <%= expired %>
+                    <%= fail %>
+                        <%= resetPswdMailSent %>
+                            <%= expired %>
             </p>
 
             <div class="form">
@@ -167,22 +169,22 @@
                         <input type="email" name="email" placeholder="Email" required="true" id="email" />
                         <span id="emailError" class="error-message"></span>
                     </div>
-                
+
                     <div class="mb-4">
                         <input type="password" name="pswd" placeholder="Password" required="true" id="pswd" />
                         <span id="pswdError" class="error-message"></span>
                     </div>
-                
+
                     <div class="d-flex">
                         <span><a style="font-size: 11px;" href="/forgot-password">Forgot Password?</a></span>
                     </div>
-                
+
                     <button type="submit">Login</button>
                 </form>
 
-                <!-- <button class="google-btn" onclick="window.location.href='/auth/google'">
+                <a class="google-btn" href="/auth/google">
                     Sign in with Google
-                </button> -->
+                </a>
             </div>
         </div>
     </div>
@@ -198,25 +200,26 @@
         function validateForm() {
             document.getElementById('emailError').innerText = "";
             document.getElementById('pswdError').innerText = "";
-    
+
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('pswd').value.trim();
             let isValid = true;
-    
+
             const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
             if (!emailPattern.test(email)) {
                 document.getElementById('emailError').innerText = "Please enter a valid email address.";
                 isValid = false;
             }
-    
+
             if (password === "") {
                 document.getElementById('pswdError').innerText = "Password is required.";
                 isValid = false;
             }
-    
+
             return isValid;
         }
     </script>
 
 </body>
+
 </html>

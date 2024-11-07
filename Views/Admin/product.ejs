@@ -1,9 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="en">
 
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+
 <head>
     <meta charset="utf-8">
-    <title>Product</title>
+    <title>Teapoy</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +28,8 @@
                 <img src="logo-22.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
@@ -59,19 +63,43 @@
                         <span class="text">Orders</span>
                     </a>
                 </li>
-                
+
                 <li class="menu-item">
-                    <a class="menu-link text-white" href="#"> <i class="icon material-icons md-monetization_on"></i>
-                        <span class="text">Transactions</span>
+                    <a class="menu-link text-white" href="/coupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupon</span>
                     </a>
                 </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/offer"> <i
+                            class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offer</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="menu-link text-white" href="/salesReport"> <i
+                            class="icon material-icons md-insert_chart_outlined"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link text-white" href="/bestSelling"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Best Selling</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/bestCategory">Category</a>
+                        <a href="/bestProduct">Product</a>
+                        <a href="/bestBrand" >Brand</a>
+                    </div>
+                </li>
+
             </ul>
             <hr>
             <br>
             <br>
         </nav>
     </aside>
-
     <main class="main-wrap">
         <header style="background-color: #0D0C11;" class="main-header navbar">
             <div class="col-search">
@@ -79,9 +107,12 @@
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
                         class="material-icons md-apps"></i> </button>
-                <a class="dropdown-item text-danger" href="/admin-logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                <a class="dropdown-item text-danger" href="/admin-logout"><i
+                        class="material-icons md-exit_to_app"></i>Logout</a>
             </div>
         </header>
+
+
         <section class="content-main">
             <div class="content-header">
                 <div>
@@ -95,7 +126,7 @@
                 <header class="card-header">
                     <div class="row align-items-center">
                         <div class="col col-check flex-grow-0">
-                            
+
                         </div>
                         <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
                             <select class="form-select">
@@ -129,10 +160,11 @@
                                 </tr>
                             </thead>
                             <tbody class="text-white">
-                                <% data.forEach(data=> { %>
+                                <% products.forEach(data=> { %>
                                     <tr>
                                         <td style="vertical-align: middle; text-align: center;">
-                                            <img src="/uploads/<%= data.images[0] %>" width="50" class="img-fluid" alt="">
+                                            <img src="/uploads/<%= data.images[0] %>" width="50" class="img-fluid"
+                                                alt="">
                                         </td>
                                         <td>
                                             <%= data.title %>
@@ -141,7 +173,7 @@
                                             <%= data.stock %>
                                         </td>
                                         <td>
-                                            <%= "₹"+data.price %>
+                                            <%= "₹" +data.price %>
                                         </td>
                                         <td>
                                             <% if(data.isPublished){ %>
@@ -151,20 +183,23 @@
                                                     <% } %>
                                         </td>
                                         <td>
-                                            <a class="btn btn-outline-warning btn-sm" href="/edit-product/<%= data._id %>">Edit</a>
+                                            <a class="btn btn-outline-warning btn-sm"
+                                                href="/edit-product/<%= data._id %>">Edit</a>
                                             <% if(data.isPublished){ %>
                                                 <form action="/unpublish-product/<%= data._id %>" method="post">
-                                                    <button class=" btn btn-outline-warning btn-sm" type="submit">Unpublish</button>
+                                                    <button class=" btn btn-outline-warning btn-sm"
+                                                        type="submit">Unpublish</button>
                                                 </form>
                                                 <% }else{ %>
                                                     <form action="/publish-product/<%= data._id %>" method="post">
-                                                        <button class=" btn btn-outline-warning btn-sm" type="submit">Publish</button>
+                                                        <button class=" btn btn-outline-warning btn-sm"
+                                                            type="submit">Publish</button>
                                                     </form>
                                                     <% } %>
                                         </td>
                                     </tr>
                                     <% }); %>
-                                    
+
 
                             </tbody>
                         </table> <!-- table-responsive.// -->
@@ -174,13 +209,13 @@
             <div class="pagination-area mt-30 mb-50">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i
-                                    class="material-icons md-chevron_right"></i></a></li>
+                        <% for(let i=1; i <=totalPages; i++) { %>
+                            <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+                                <a class="page-link" href="/products?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } %>
                     </ul>
                 </nav>
             </div>
