@@ -481,9 +481,9 @@ const loadOrder = async (req, res) => {
     const totalPages = Math.ceil(totalOrders / limit);
 
     const orders = await Order.find()
-     .sort({ orderDate: -1 })
+      .sort({ orderDate: -1 })
       .skip(skip)
-      .limit(limit)
+      .limit(limit);
 
     res.render("order", {
       orders,
@@ -610,6 +610,56 @@ const adminOrderCancel = async (req, res) => {
     return res.status(500).json({
       message: "An error occurred while processing the cancellation.",
     });
+  }
+};
+
+const verifyReturn = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const { approval } = req.body;
+
+    if(approval==='Approved'){
+      const order=await Order.findById(orderId)
+      const userId=order.userId
+      const wallet = await Wallet.findOne({userId:userId})
+
+      for (const item of order.items) {
+        const product = await Product.findById(item.product._id);
+
+        if (product) {
+          product.stock += item.quantity; 
+          await product.save();
+        }
+      }
+
+
+      const refundAmount=order.totalPrice
+      wallet.balance+=refundAmount
+      await wallet.save()
+
+      order.status='Returned'
+      order.returnStatus='Approved'
+      await order.save()
+      
+
+      const transaction=new Transaction({
+        userId:userId,
+        amount:order.totalPrice,
+        status:'Success',
+        type:'Credited',
+      })
+      await transaction.save()
+
+      
+    }else if (approval === "Rejected") {
+      const order=await Order.findById(orderId)
+      order.returnStatus = "Rejected";
+      await order.save();
+    }
+
+    return res.redirect('/order')
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -1037,4 +1087,5 @@ module.exports = {
   loadBestCategory,
   loadBestBrand,
   loadBestProduct,
+  verifyReturn,
 };

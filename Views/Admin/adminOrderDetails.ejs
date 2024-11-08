@@ -71,7 +71,8 @@
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link text-white" href="/offer"> <i class="icon material-icons md-monetization_on"></i>
+                    <a class="menu-link text-white" href="/offer"> <i
+                            class="icon material-icons md-monetization_on"></i>
                         <span class="text">Offer</span>
                     </a>
                 </li>
@@ -82,13 +83,14 @@
                     </a>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link text-white" href="/bestSelling"> <i class="icon material-icons md-monetization_on"></i>
+                    <a class="menu-link text-white" href="/bestSelling"> <i
+                            class="icon material-icons md-monetization_on"></i>
                         <span class="text">Best Selling</span>
                     </a>
                     <div class="submenu">
                         <a href="/bestCategory">Category</a>
                         <a href="/bestProduct">Product</a>
-                        <a href="/bestBrand" >Brand</a>
+                        <a href="/bestBrand">Brand</a>
                     </div>
                 </li>
 
@@ -113,11 +115,34 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Order detail</h2>
-                    <p>Details for Order ID: 3453012</p>
                 </div>
             </div>
             <div class="card">
                 <header class="card-header" style="color: white;">
+                    <div>
+                        <h6 style="color: white;">Return Request Status :</h6>
+                        <% if(orders.returnStatus==='Pending' ){ %>
+                            <p class="text-warning">Return request is pending approval.</p>
+                            <p style="color: white;">Reason : <%= orders.returnReason %></p>
+                            <form method="POST" action="/orders/return-approval/<%= orders._id %>">
+                                <button type="submit" name="approval" value="Approved"
+                                    class="btn btn-success">Approve</button>
+                                <button type="submit" name="approval" value="Rejected"
+                                    class="btn btn-danger">Reject</button>
+                            </form>
+                            <% }else if(orders.returnStatus==='Approved' ){ %>
+                                <p class="text-success">Return request has been approved.</p>
+                                <% }else if (orders.returnStatus==='Rejected' ) { %>
+                                    <p class="text-danger">Return request has been rejected.</p>
+                                    <% } else { %>
+                                        <p>No return request for this order.</p>
+                                        <% } %>
+                    </div>
+
+                    <br>
+
+
+
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                             <span>
@@ -125,28 +150,34 @@
                             </span> <br>
                             <small class="text-muted">Order ID: <%= orders.orderNumber %></small>
                         </div>
-                        <% if(orders.status==='Delivered'){ %>
+                        <% if(orders.status==='Delivered' ){ %>
                             <p style="color: green;">Order Delivered Successfully</p>
 
-                        <% }else if(orders.paymentStatus==='Failed'){ %>
-                            <p style="color: red;">Payment Failed</p>
-                        <%}else{  %>
-                        <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                            <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" id="statusSelect">
-                                <option value="Pending" <%=orders.status==='Pending' ? 'selected' : '' %>>Pending
-                                </option>
-                                <option value="Shipped" <%=orders.status==='Shipped' ? 'selected' : '' %>>Shipped
-                                </option>
-                                <option value="Delivered" <%=orders.status==='Delivered' ? 'selected' : '' %>>Delivered
-                                </option>
-                                <option value="Cancelled" <%=orders.status==='Cancelled' ? 'selected' : '' %>>Cancelled
-                                </option>
-                                <option value="Returned" <%=orders.status==='Returned' ? 'selected' : '' %>>Returned
-                                </option>
-                            </select>
-                            <a class="btn btn-primary" href="/order">Save</a>
-                        </div>
-                        <% } %>
+                            <% }else if(orders.paymentStatus==='Failed' ){ %>
+                                <p style="color: red;">Payment Failed</p>
+                                <%}else{ %>
+                                    <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                                        <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200"
+                                            id="statusSelect">
+                                            <option value="Pending" <%=orders.status==='Pending' ? 'selected' : '' %>
+                                                >Pending
+                                            </option>
+                                            <option value="Shipped" <%=orders.status==='Shipped' ? 'selected' : '' %>
+                                                >Shipped
+                                            </option>
+                                            <option value="Delivered" <%=orders.status==='Delivered' ? 'selected' : ''
+                                                %>>Delivered
+                                            </option>
+                                            <option value="Cancelled" <%=orders.status==='Cancelled' ? 'selected' : ''
+                                                %>>Cancelled
+                                            </option>
+                                            <option value="Returned" <%=orders.status==='Returned' ? 'selected' : '' %>
+                                                >Returned
+                                            </option>
+                                        </select>
+                                        <a class="btn btn-primary" href="/order">Save</a>
+                                    </div>
+                                    <% } %>
                     </div>
                 </header> <!-- card-header end// -->
                 <div class="card-body" style="color: white;">
@@ -157,7 +188,7 @@
                                 <span class="icon icon-sm rounded-circle bg-primary-light">
                                     <i class="text-primary material-icons md-person"></i>
                                 </span>
-                                <div class="text" >
+                                <div class="text">
                                     <h6 style="color: white;" class="mb-1">Customer</h6>
                                     <p class="mb-1">
                                         <%=orders.billingDetails.name %> <br>
@@ -218,8 +249,8 @@
                                                 <td>
                                                     <a class="itemside" href="#">
                                                         <div class="left">
-                                                            <img src="/uploads/<%= item.product.images[0] %>"
-                                                                width="40" height="40" class="img-xs" alt="Item">
+                                                            <img src="/uploads/<%= item.product.images[0] %>" width="40"
+                                                                height="40" class="img-xs" alt="Item">
                                                         </div>
                                                         <div class="info" style="color: white;">
                                                             <%= item.product.title %>
@@ -300,12 +331,12 @@
 
 
         <script>
-            document.getElementById('statusSelect').addEventListener('change', function() {
-                
+            document.getElementById('statusSelect').addEventListener('change', function () {
+
                 const selectedStatus = this.value;
-               
+
                 const orderId = '<%= orders._id %>';
-    
+
                 fetch('/updateStatus', {
                     method: 'POST',
                     headers: {
@@ -313,21 +344,21 @@
                     },
                     body: JSON.stringify({ orderId, selectedStatus })
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to update status');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    
-                    console.log('Status updated successfully:', data);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    
-                    console.error('Error updating status:', error);
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to update status');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+
+                        console.log('Status updated successfully:', data);
+                        window.location.reload();
+                    })
+                    .catch(error => {
+
+                        console.error('Error updating status:', error);
+                    });
             });
         </script>
 

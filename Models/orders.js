@@ -54,6 +54,14 @@ const orderSchema = new mongoose.Schema({
   returnReason: {
     type: String,
   },
+  returnStatus:{
+    type:String,
+    enum:['None','Pending','Approved','Rejected'],
+    default:'None',
+  },
+  returnRequestDate:{
+    type:Date,
+  },
   discount: {
     type: Number,
     default: 0,

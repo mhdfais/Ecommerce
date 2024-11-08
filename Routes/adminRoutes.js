@@ -19,6 +19,7 @@ admin_route.use(
 const adminController = require("../Controller/adminController");
 const dashboardController = require("../Controller/dashboardController");
 const isAdmin = require("../Middlewares/adminAuth");
+const { returnOrder } = require("../Controller/userController");
 // const upload = require("../Controller/adminController");\
 
 // authentication
@@ -84,6 +85,7 @@ admin_route.get(
   isAdmin,
   adminController.adminOrderCancel
 );
+admin_route.post("/orders/return-approval/:orderId", adminController.verifyReturn);
 admin_route.get("/orders", isAdmin, adminController.getPaginatedOrders);
 
 //   coupons

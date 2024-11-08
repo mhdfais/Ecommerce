@@ -189,7 +189,9 @@
                                                 <span class="badge rounded-pill alert-danger text-danger">
                                                   Payment Failed 
                                                 </span>
-                                              <% } %>
+                                              <% }else if(order.returnStatus==='Pending'){ %>
+                                                <p style="color: red;">Return requested</p>
+                                                <% } %>
                                         </td>
                                         <td>
                                             <%= order.orderDate.toLocaleDateString('en-IN') %>
