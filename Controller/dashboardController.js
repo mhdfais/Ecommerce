@@ -37,9 +37,9 @@ const loadDashboard = async (req, res) => {
       totalOrders,
       productsCount,
       totalDiscount,
-      ordersPie,
-      ordersGraph,
-      ordersYearGraph,
+      ordersPie: JSON.stringify(ordersPie),
+      ordersGraph: JSON.stringify(ordersGraph),
+      ordersYearGraph: JSON.stringify(ordersYearGraph),
       // ordersWeekGraph
     });
   } catch (error) {
