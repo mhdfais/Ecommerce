@@ -17,6 +17,7 @@ const Coupon = require("../Models/coupon");
 const Wallet = require("../Models/wallet");
 const Transaction = require("../Models/transaction");
 const Category = require("../Models/category");
+require('dotenv').config()
 
 // ------------------------------------------------  NODEMAILER  -----------------------------------------------
 
@@ -51,7 +52,7 @@ const googleAuth = (req, res) => {
 };
 
 // ---------------------------------------  RAZORPAY  -------------------------------------------------------
-
+console.log(process.env.RAZORPAY_KEY_ID)
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
