@@ -12,7 +12,7 @@ mongoose
   .catch((err) => console.log("could not connect to db", err));
 
 const path = require("path");
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "Public")));
 
 app.use(
   session({
