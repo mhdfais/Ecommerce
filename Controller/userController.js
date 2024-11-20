@@ -24,8 +24,8 @@ require('dotenv').config()
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "teapoy11@gmail.com",
-    pass: "aepy uwml fllg mcly",
+    user: process.env.USER_EMAIL,
+    pass: process.env.USER_PASS,
   },
 });
 
@@ -51,7 +51,7 @@ const googleAuth = (req, res) => {
   }
 };
 
-// ---------------------------------------  RAZORPAY  -------------------------------------------------------
+// --------------------------------------------  RAZORPAY  -------------------------------------------------------
 console.log(process.env.RAZORPAY_KEY_ID)
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -345,7 +345,7 @@ const verifyRetryPayment = async (req, res) => {
   }
 };
 
-// --------------------------------------------------  OTP  -----------------------------------------------
+// --------------------------------------------------  OTP  ------------------------------------------------------
 
 const loadOtpVerification = async (req, res) => {
   try {
@@ -387,7 +387,7 @@ const sendOtpVerificationEmail = async ({ _id, email }, res) => {
       html: `<p>Enter <b>${otp}</b> in the app to verify your email address</p>`,
     };
     const hashedOtp = await bcrypt.hash(otp, 10);
-    // console.log(`${_id} 22`)/////////////////////////
+    // console.log(`${_id} 22`)
     const newOtpVerification = new userOtpVerification({
       userId: _id,
       otp: hashedOtp,
@@ -592,18 +592,17 @@ const loadLogin = async (req, res) => {
   }
 };
 
-// --------------------------------------------------  HOME  -----------------------------------------------
+// --------------------------------------------------  HOME  -----------------------------------------------------
 
 const loadHome = async (req, res) => {
   try {
     const products = await Product.find({ isPublished: true }).populate({
       path: "category",
-      match: { isListed: true }, // Only include categories that are listed
-      select: "category", // Select the category name (or other fields if needed)
+      match: { isListed: true }, 
+      select: "category", 
     });
 
-    const filteredProducts = products.filter((product) => product.category); // Filter out products that have no category (due to unlisted categories)
-
+    const filteredProducts = products.filter((product) => product.category); 
     res.render("home", { products: filteredProducts });
   } catch (error) {
     console.log(error.message);
@@ -665,13 +664,13 @@ const verifyForgotPasswordEmail = async (req, res) => {
     data.resetPasswordExpires = tokenExpiration;
     await data.save();
 
-    const resetUrl = `http://localhost:4444/reset-password/${token}`;
+    const resetUrl = `https://teapoy.shop/reset-password/${token}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "teapoy11@gmail.com",
-        pass: "aepy uwml fllg mcly",
+        user: process.env.USER_EMAIL,
+        pass: process.env.USER_PASS,
       },
     });
 
@@ -1065,39 +1064,6 @@ const getOrderInvoice = async (req, res) => {
       .populate("userId")
       .populate("items.product");
 
-    // const logoUrl = "/user/logo-11.svg";
-
-    // const invoiceData = {
-    //   images: {
-    //     logo: "https://public.budgetinvoice.com/img/logo_en_original.png",
-    //   },
-    //   sender: {
-    //     company: "Teapoy Private Limited",
-    //   },
-    //   client: {
-    //     company: order.userId.name,
-    //     address: order.billingDetails.address,
-    //     zip: order.billingDetails.pincode,
-    //     city: order.billingDetails.city,
-    //     country: order.billingDetails.country,
-    //   },
-    //   information: {
-    //     number: order.orderNumber,
-    //     date: new Date(order.orderDate).toLocaleDateString(),
-    //   },
-    //   products: order.items.map((item) => ({
-    //     description: item.product.title,
-    //     quantity: item.quantity,
-    //     price: item.price,
-
-    //   })),
-    //   settings: {
-    //     currency: "INR",
-    //   },
-
-    //   bottomNotice: "Thanks for purchasing from Teapoy",
-    // };
-
     const invoiceData = {
       images: {
         logo: "https://public.budgetinvoice.com/img/logo_en_original.png",
@@ -1117,14 +1083,13 @@ const getOrderInvoice = async (req, res) => {
         date: new Date(order.orderDate).toLocaleDateString(),
       },
       products: [
-        // First add all products
+        
         ...order.items.map((item) => ({
           description: item.product.title,
           quantity: item.quantity,
           price: item.price,
           "tax-rate": 0,
         })),
-        // Then add discount as a negative value product
         {
           description: "Discount",
           price: -order.discount,
@@ -1135,6 +1100,7 @@ const getOrderInvoice = async (req, res) => {
         currency: "INR",
       },
       "bottom-notice": "Thanks for purchasing from Teapoy",
+      
     };
 
     const result = await easyinvoice.createInvoice(invoiceData);

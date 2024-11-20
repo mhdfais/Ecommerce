@@ -618,46 +618,42 @@ const verifyReturn = async (req, res) => {
     const orderId = req.params.orderId;
     const { approval } = req.body;
 
-    if(approval==='Approved'){
-      const order=await Order.findById(orderId)
-      const userId=order.userId
-      const wallet = await Wallet.findOne({userId:userId})
+    if (approval === "Approved") {
+      const order = await Order.findById(orderId);
+      const userId = order.userId;
+      const wallet = await Wallet.findOne({ userId: userId });
 
       for (const item of order.items) {
         const product = await Product.findById(item.product._id);
 
         if (product) {
-          product.stock += item.quantity; 
+          product.stock += item.quantity;
           await product.save();
         }
       }
 
+      const refundAmount = order.totalPrice;
+      wallet.balance += refundAmount;
+      await wallet.save();
 
-      const refundAmount=order.totalPrice
-      wallet.balance+=refundAmount
-      await wallet.save()
+      order.status = "Returned";
+      order.returnStatus = "Approved";
+      await order.save();
 
-      order.status='Returned'
-      order.returnStatus='Approved'
-      await order.save()
-      
-
-      const transaction=new Transaction({
-        userId:userId,
-        amount:order.totalPrice,
-        status:'Success',
-        type:'Credited',
-      })
-      await transaction.save()
-
-      
-    }else if (approval === "Rejected") {
-      const order=await Order.findById(orderId)
+      const transaction = new Transaction({
+        userId: userId,
+        amount: order.totalPrice,
+        status: "Success",
+        type: "Credited",
+      });
+      await transaction.save();
+    } else if (approval === "Rejected") {
+      const order = await Order.findById(orderId);
       order.returnStatus = "Rejected";
       await order.save();
     }
 
-    return res.redirect('/order')
+    return res.redirect("/order");
   } catch (error) {
     console.log(error);
   }
@@ -834,7 +830,7 @@ const unListOffer = async (req, res) => {
   }
 };
 
-//================================================== SALES REPORT ==================================================
+//  ================================================== SALES REPORT ================================================
 
 const loadSalesReport = async (req, res) => {
   try {
@@ -842,7 +838,7 @@ const loadSalesReport = async (req, res) => {
     const limit = 8;
     const skip = (page - 1) * limit;
 
-    let filterOptions = {};
+    let filterOptions = { status: "Delivered" };
     let today = dayjs().startOf("day");
 
     switch (filter) {
@@ -908,7 +904,7 @@ const loadSalesReport = async (req, res) => {
   }
 };
 
-//=============================================  BEST SELLING CATEGORY  ===========================================
+//  ===========================================  BEST SELLING CATEGORY  ===========================================
 
 const loadBestCategory = async (req, res) => {
   try {

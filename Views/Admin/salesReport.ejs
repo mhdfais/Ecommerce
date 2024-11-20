@@ -84,13 +84,14 @@
                     </a>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link text-white" href="/bestSelling"> <i class="icon material-icons md-monetization_on"></i>
+                    <a class="menu-link text-white" href="/bestSelling"> <i
+                            class="icon material-icons md-monetization_on"></i>
                         <span class="text">Best Selling</span>
                     </a>
                     <div class="submenu">
                         <a href="/bestCategory">Category</a>
                         <a href="/bestProduct">Product</a>
-                        <a href="/bestBrand" >Brand</a>
+                        <a href="/bestBrand">Brand</a>
                     </div>
                 </li>
 
@@ -167,7 +168,7 @@
                                 <thead>
                                     <tr class="text-white">
                                         <th>Order ID</th>
-                                        <th>Email</th>
+
                                         <th>Date</th>
                                         <th>Discount</th>
                                         <th>Paid</th>
@@ -178,13 +179,11 @@
                                     <% orders.forEach(order=>{ %>
                                         <tr>
                                             <td>
-                                                <%= order._id %>
+                                                <%= order.orderNumber %>
                                             </td>
+
                                             <td>
-                                                <%= order.userId.email %>
-                                            </td>
-                                            <td>
-                                                <%= new Date(order.orderDate).toLocaleDateString() %>
+                                                <%= order.orderDate.toLocaleDateString('en-IN') %>
                                             </td>
                                             <td>
                                                 <% if(order.discount===0){ %>
@@ -224,7 +223,7 @@
             </div>
         </section>
 
-        
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <script
@@ -237,17 +236,30 @@
                     console.log("downloading PDF");
 
                     const { jsPDF } = window.jspdf;
-
                     const doc = new jsPDF();
 
                     const table = document.querySelector('table');
-
                     const headingText = document.getElementById('heading').innerText;
+
+                    const rows = table.querySelectorAll('tbody tr');
+                    let totalAmount = 0;
+                    let totalDiscount = 0;
+
+                    rows.forEach(row => {
+                        const paidCell = parseFloat(row.children[3].innerText || 0); // Total Paid
+                        const discountCell = parseFloat(row.children[2].innerText || 0); // Discount
+                        if (!isNaN(paidCell)) totalAmount += paidCell;
+                        if (!isNaN(discountCell)) totalDiscount += discountCell;
+                    });
 
                     doc.setFontSize(22);
                     doc.text(headingText, 20, 20);
 
-                    doc.autoTable({ html: table, startY: 30 });
+                    doc.autoTable({ html: table, startY: 55 });
+
+                    doc.setFontSize(12);
+                    doc.text(`Total Amount: ${totalAmount.toFixed(2)}`, 20, 35);
+                    doc.text(`Total Discount: ${totalDiscount.toFixed(2)}`, 20, 45);
 
                     doc.save('sales-report.pdf');
                 } catch (error) {
@@ -255,23 +267,47 @@
                 }
             };
 
+
             const downloadExcel = () => {
                 try {
                     console.log("downloading excel");
 
                     const table = document.querySelector('table');
-
                     const ws = XLSX.utils.table_to_sheet(table);
-
                     const wb = XLSX.utils.book_new();
 
-                    XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
+                    const rows = table.querySelectorAll('tbody tr');
+                    let totalAmount = 0;
+                    let totalDiscount = 0;
 
+                    rows.forEach(row => {
+                        const paidCell = parseFloat(row.children[3].innerText || 0); 
+                        const discountCell = parseFloat(row.children[2].innerText || 0); 
+                        if (!isNaN(paidCell)) totalAmount += paidCell;
+                        if (!isNaN(discountCell)) totalDiscount += discountCell;
+                    });
+
+                    const tableRange = XLSX.utils.decode_range(ws['!ref']);
+                    const totalRowIndex = tableRange.e.r + 2; 
+
+                    // Append totals to the worksheet
+                    ws[`A${totalRowIndex}`] = { t: 's', v: 'Totals:' };
+                    ws[`C${totalRowIndex}`] = { t: 'n', v: totalDiscount.toFixed(2) }; 
+                    ws[`D${totalRowIndex}`] = { t: 'n', v: totalAmount.toFixed(2) }; 
+
+                    ws['!ref'] = XLSX.utils.encode_range({
+                        s: tableRange.s,
+                        e: { c: tableRange.e.c, r: totalRowIndex - 1 },
+                    });
+
+                    XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
                     XLSX.writeFile(wb, 'sales-report.xlsx');
                 } catch (error) {
                     console.error("Error downloading Excel:", error);
                 }
             };
+
+
         </script>
 
         <%- include('footer.ejs') %>
