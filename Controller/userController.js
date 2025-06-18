@@ -347,6 +347,25 @@ const verifyRetryPayment = async (req, res) => {
 
 // --------------------------------------------------  OTP  ------------------------------------------------------
 
+
+const loadLandingPage=async(req,res)=>{
+  try {
+     const products = await Product.find({ isPublished: true }).populate({
+      path: "category",
+      match: { isListed: true },
+      select: "category",
+    });
+
+    const filteredProducts = products.filter((product) => product.category);
+    res.render("landingPage", { products: filteredProducts });
+  } catch (error) {
+    console.error(error.message);
+    
+  }
+}
+
+
+
 const loadOtpVerification = async (req, res) => {
   try {
     const userId = req.query.userId;
@@ -1830,4 +1849,5 @@ module.exports = {
   cancelCoupon,
   retryPayment,
   verifyRetryPayment,
+  loadLandingPage
 };

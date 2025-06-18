@@ -1,6 +1,6 @@
 <%- include('header.ejs') %>
 
-    <main class="main">
+<main class="main">
         <section class="home-slider position-relative pt-50">
             <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
                 <div class="single-hero-slider single-animation-wrap">
@@ -130,58 +130,4 @@
                    
     </main>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        async function addToCart(productId) {
-            event.preventDefault();
-
-            try {
-                const response = await fetch('/home/addToCart', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        productId: productId,
-                        quantity: 1
-                    })
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    if (result.message === "Maximum quantity of 5 reached for this product") {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Maximum Quantity Reached',
-                            text: 'You can only add a maximum of 5 units of this product.',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        throw new Error(result.message || 'Failed to add product to cart');
-                    }
-                    return;
-                }
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Added to Cart',
-                    text: result.message,
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.message || 'There was an error adding the product to the cart.'
-                });
-            }
-        }
-    </script>
-
-
-
-    <%- include('footer.ejs') %>
+  <%- include('footer.ejs') %>

@@ -44,6 +44,8 @@ user_route.get(
   userController.googleAuth
 );
 
+user_route.get('/',userController.loadLandingPage)
+
 // authentication
 user_route.get("/register", userController.loadRegister);
 user_route.get("/login", userController.loadLogin);
