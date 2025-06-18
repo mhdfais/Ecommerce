@@ -24,7 +24,7 @@
     "uuid": "^11.0.2"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "name": "ecommerce",
   "version": "1.0.0",
