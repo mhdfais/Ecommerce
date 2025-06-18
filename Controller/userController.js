@@ -1,7 +1,7 @@
 const User = require("../Models/userModel");
 const userOtpVerification = require("../Models/userOtpVerification");
 const Product = require("../Models/product");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
@@ -17,7 +17,7 @@ const Coupon = require("../Models/coupon");
 const Wallet = require("../Models/wallet");
 const Transaction = require("../Models/transaction");
 const Category = require("../Models/category");
-require('dotenv').config()
+require("dotenv").config();
 
 // ------------------------------------------------  NODEMAILER  -----------------------------------------------
 
@@ -52,7 +52,7 @@ const googleAuth = (req, res) => {
 };
 
 // --------------------------------------------  RAZORPAY  -------------------------------------------------------
-console.log(process.env.RAZORPAY_KEY_ID)
+console.log(process.env.RAZORPAY_KEY_ID);
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -598,11 +598,11 @@ const loadHome = async (req, res) => {
   try {
     const products = await Product.find({ isPublished: true }).populate({
       path: "category",
-      match: { isListed: true }, 
-      select: "category", 
+      match: { isListed: true },
+      select: "category",
     });
 
-    const filteredProducts = products.filter((product) => product.category); 
+    const filteredProducts = products.filter((product) => product.category);
     res.render("home", { products: filteredProducts });
   } catch (error) {
     console.log(error.message);
@@ -1083,7 +1083,6 @@ const getOrderInvoice = async (req, res) => {
         date: new Date(order.orderDate).toLocaleDateString(),
       },
       products: [
-        
         ...order.items.map((item) => ({
           description: item.product.title,
           quantity: item.quantity,
@@ -1100,7 +1099,6 @@ const getOrderInvoice = async (req, res) => {
         currency: "INR",
       },
       "bottom-notice": "Thanks for purchasing from Teapoy",
-      
     };
 
     const result = await easyinvoice.createInvoice(invoiceData);
